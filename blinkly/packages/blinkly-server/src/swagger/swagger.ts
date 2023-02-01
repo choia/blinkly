@@ -1,7 +1,7 @@
 export const swaggerConfig = {
   swagger: {
     info: {
-      title: 'Test swagger',
+      title: 'Test Blinkly',
       description: 'Testing the Fastify swagger API',
       version: '0.1.0',
     },
@@ -14,8 +14,8 @@ export const swaggerConfig = {
     consumes: ['application/json'],
     produces: ['application/json'],
     tags: [
-      { name: 'user', description: 'User related end-points' },
-      { name: 'code', description: 'Code related end-points' },
+      // { name: 'user', description: 'User related end-points' },
+      // { name: 'code', description: 'Code related end-points' },
     ],
     definitions: {
       User: {

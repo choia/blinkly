@@ -3,6 +3,7 @@ import { swaggerConfig, swaggerConfigUI } from './swagger/swagger.js'
 import Fastify from 'fastify'
 import routes from './routes/index.js'
 import fastifySwaggerUi from '@fastify/swagger-ui'
+import db from './lib/db.js'
 
 const server = Fastify({
   logger: true,

@@ -1,6 +1,7 @@
 import db from '../lib/db.js'
 import bcrypt from 'bcrypt'
-interface AuthParam {
+import AppError from '../lib/AppError.js'
+interface AuthParams {
   username: string
   password: string
 }
@@ -17,7 +18,17 @@ class UserService {
     return UserService.instance
   }
 
-  async register({ username, password }: AuthParam) {
+  async register({ username, password }: AuthParams) {
+    const exists = await db.user.findUnique({
+      where: {
+        username,
+      },
+    })
+
+    if (exists) {
+      // throw new Error('User already exists')
+      throw new AppError('UserExistsError')
+    }
     const hash = await bcrypt.hash(password, SALT_ROUNDS)
 
     const user = await db.user.create({

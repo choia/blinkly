@@ -5,6 +5,7 @@ import routes from './routes/index.js'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import db from './lib/db.js'
 import AppError from './lib/AppError.js'
+import 'dotenv/config'
 
 const server = Fastify({
   logger: true,

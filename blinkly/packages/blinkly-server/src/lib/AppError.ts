@@ -11,7 +11,7 @@ type ErrorInfo = {
 
 const statusCodeMap: Record<ErrorName, ErrorInfo> = {
   UserExistsError: {
-    message: 'User does not exists',
+    message: 'User already exists',
     statusCode: 409,
   },
   AuthenticationError: {

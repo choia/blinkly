@@ -1,7 +1,8 @@
 import db from '../lib/db.js'
 import bcrypt from 'bcrypt'
-import AppError from '../lib/AppError.js'
+import AppError, { isAppError } from '../lib/AppError.js'
 import { generateToken } from '../lib/tokens.js'
+import { User } from '@prisma/client'
 interface AuthParams {
   username: string
   password: string
@@ -19,20 +20,9 @@ class UserService {
     return UserService.instance
   }
 
-  async generateTokens(userId: number, username: string) {
-    // const accessToken = await generateToken({
-    //   type: 'access_token',
-    //   userId,
-    //   tokenId: 1,
-    //   username: username,
-    // })
-
-    // const refreshToken = await generateToken({
-    //   type: 'refresh_token',
-    //   tokenId: 1,
-    //   rotationCounter: 1,
-    // })
-
+  /* GenerateTokens */
+  async generateTokens(user: User) {
+    const { id: userId, username } = user
     const [accessToken, refreshToken] = await Promise.all([
       generateToken({
         type: 'access_token',
@@ -53,6 +43,7 @@ class UserService {
     }
   }
 
+  /* Register */
   async register({ username, password }: AuthParams) {
     const exists = await db.user.findUnique({
       where: {
@@ -70,7 +61,7 @@ class UserService {
         passwordHash: hash,
       },
     })
-    const tokens = await this.generateTokens(user.id, username)
+    const tokens = await this.generateTokens(user)
 
     return {
       user,
@@ -78,8 +69,36 @@ class UserService {
     }
   }
 
-  login() {
-    return 'login!!'
+  /* Login */
+  async login({ username, password }: AuthParams) {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+    })
+
+    if (!user) {
+      throw new AppError('AuthenticationError')
+    }
+
+    try {
+      const result = await bcrypt.compare(password, user.passwordHash)
+      if (!result) {
+        throw new AppError('AuthenticationError')
+      }
+    } catch (e) {
+      if (isAppError(e)) {
+        throw e
+      }
+      throw new AppError('UnknownError')
+    }
+
+    const tokens = await this.generateTokens(user)
+
+    return {
+      user,
+      tokens,
+    }
   }
 }
 

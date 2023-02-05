@@ -23,7 +23,7 @@ const tokenResultSchema = {
 const userResultSchema = {
   type: 'object',
   properties: {
-    id: { type: 'string ' },
+    id: { type: 'string' },
     username: { type: 'string' },
   },
   example: {
@@ -31,24 +31,37 @@ const userResultSchema = {
   },
 }
 
-export const registerSchema: FastifySchema = {
+const AuthResultSchema = {
+  tokens: tokenResultSchema,
+  user: userResultSchema,
+}
+
+export const registerSchema = {
   body: authBodySchema,
   response: {
-    200: tokenResultSchema,
+    200: AuthResultSchema,
     409: {
       ...appErrorSchema,
       example: {
         name: 'UserExistsError',
         message: 'User already exists',
-        statusCode: '409',
+        statusCode: 409,
       },
     },
   },
 }
 
-export const loginSchema: FastifySchema = {
+export const loginSchema = {
   body: authBodySchema,
   response: {
-    200: tokenResultSchema,
+    200: AuthResultSchema,
+    401: {
+      ...appErrorSchema,
+      exammple: {
+        name: 'AuthenticationError',
+        message: 'Invalid username or password',
+        statusCode: 401,
+      },
+    },
   },
 }

@@ -7,9 +7,14 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance()
 
   /** POST LOGIN */
-  fastify.post('/login', { schema: loginSchema }, async () => {
-    return userService.login()
-  })
+  fastify.post<{ Body: AuthBody }>(
+    '/login',
+    { schema: loginSchema },
+    async (request, reply) => {
+      // const loginResult = await userService.login(request.body)
+      return userService.login(request.body)
+    },
+  )
 
   /** POST REGISTER */
   fastify.post<{ Body: AuthBody }>(
@@ -18,22 +23,9 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       schema: registerSchema,
     },
     async (request, reply) => {
-      const authResult = await userService.register(request.body)
-      return authResult
+      // const authResult = await userService.register(request.body)
+      return userService.register(request.body)
     },
   )
-
-  /** example of schema tags for swagger */
-  // fastify.post(
-  //   '/login',
-  //   {
-  //     schema: {
-  //       tags: ['auth', 'user'],
-  //     },
-  //   },
-  //   async () => {
-  //     return userService.login()
-  //   },
-  // )
 }
 export default authRoute

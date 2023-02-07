@@ -11,8 +11,18 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     '/login',
     { schema: loginSchema },
     async (request, reply) => {
-      // const loginResult = await userService.login(request.body)
-      return userService.login(request.body)
+      const loginResult = await userService.login(request.body)
+      reply.setCookie('access_token', loginResult.tokens.accessToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60),
+        path: '/',
+      })
+      reply.setCookie('refresh_token', loginResult.tokens.refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        path: '/',
+      })
+      return loginResult
     },
   )
 

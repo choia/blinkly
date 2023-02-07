@@ -1,5 +1,5 @@
-import db from '../lib/db.js'
 import bcrypt from 'bcrypt'
+import db from '../lib/db.js'
 import AppError, { isAppError } from '../lib/AppError.js'
 import { generateToken } from '../lib/tokens.js'
 import { User } from '@prisma/client'

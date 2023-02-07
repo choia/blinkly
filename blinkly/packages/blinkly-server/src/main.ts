@@ -1,3 +1,4 @@
+import { authPlugin } from './plugins/authPlugin.js'
 import fastifySwagger from '@fastify/swagger'
 import { swaggerConfig, swaggerConfigUI } from './swagger/swagger.js'
 import Fastify from 'fastify'
@@ -27,6 +28,7 @@ await server.register(fastifySwaggerUi, swaggerConfigUI)
 //   return error
 // })
 
+server.register(authPlugin)
 server.register(routes)
 
 server.listen({ port: 8080 }, (err, address) => {

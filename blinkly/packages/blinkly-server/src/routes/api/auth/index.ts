@@ -1,7 +1,7 @@
-import { AuthBody } from './types.js'
-import { loginSchema, registerSchema } from './schema.js'
 import { FastifyPluginAsync } from 'fastify'
+import { AuthBody } from './types.js'
 import UserService from '../../../services/user.service.js'
+import { loginSchema, registerSchema } from './schema.js'
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance()

@@ -1,30 +1,37 @@
-import { AccessTokenPayload } from './../lib/tokens'
-import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
+import fp from 'fastify-plugin'
+import jwt from 'jsonwebtoken'
+import AppError from '../lib/AppError.js'
+import { AccessTokenPayload } from './../lib/tokens'
 import { validateToken } from '../lib/tokens.js'
-import { JsonWebTokenError } from 'jsonwebtoken'
+
+const { JsonWebTokenError } = jwt
 
 const authPluginAsync: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
+  fastify.decorateRequest('isExpiredToken', false)
+
   fastify.addHook('preHandler', async (request) => {
     const { authorization } = request.headers
     if (!authorization || !authorization.includes('Bearer ')) {
       return
     }
     const token = authorization.split('Bearer ')[1]
-    console.log('HI!! ' + token)
+
     try {
       const decoded = await validateToken<AccessTokenPayload>(token)
-      console.log(decoded)
-    } catch (e) {
+
+      request.user = {
+        id: decoded.userId,
+        username: decoded.username,
+      }
+    } catch (e: any) {
       if (e instanceof JsonWebTokenError) {
         if (e.name === 'TokenExpiredError') {
-          // handle token expired
+          request.isExpiredToken = true
         }
       }
     }
-
-    console.log('helllooooooo')
   })
 }
 
@@ -38,5 +45,6 @@ declare module 'fastify' {
       id: number
       username: string
     } | null
+    isExpiredToken: boolean
   }
 }

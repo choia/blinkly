@@ -9,18 +9,27 @@ type ErrorInfo = {
   statusCode: number
 }
 
+interface ErrorPayload {
+  UserExistsError: undefined
+  AuthenticationError: undefined
+  UnknownError: undefined
+  UnauthorizedError: {
+    isExpiredToken: boolean
+  }
+}
+
 const statusCodeMap: Record<ErrorName, ErrorInfo> = {
   UserExistsError: {
     message: 'User already exists',
     statusCode: 409,
   },
   AuthenticationError: {
-    message: 'Authentication Error',
+    message: 'Not authenticated',
     statusCode: 401,
   },
   UnauthorizedError: {
-    message: 'Unauthorized Error',
-    statusCode: 403,
+    message: 'Unauthorized',
+    statusCode: 401,
   },
   UnknownError: {
     message: 'Internal Server Error',
@@ -31,7 +40,10 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
 export default class AppError extends Error {
   public statusCode: number
 
-  constructor(public name: ErrorName) {
+  constructor(
+    public name: ErrorName,
+    public payload?: ErrorPayload[ErrorName],
+  ) {
     const info = statusCodeMap[name]
     super(info.message)
     this.statusCode = info.statusCode
@@ -52,9 +64,13 @@ export const appErrorSchema = {
   },
 }
 
-export function createAppErrorSchema<T>(example: T) {
+export function createAppErrorSchema<T, P>(example: T, payloadSchema?: any) {
   return {
-    ...appErrorSchema,
+    type: 'object',
+    properties: {
+      ...appErrorSchema.properties,
+      ...(payloadSchema ? { payload: payloadSchema } : {}),
+    },
     example,
   }
 }

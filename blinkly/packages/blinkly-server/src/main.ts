@@ -4,7 +4,6 @@ import { swaggerConfig, swaggerConfigUI } from './swagger/swagger.js'
 import Fastify from 'fastify'
 import routes from './routes/index.js'
 import fastifySwaggerUi from '@fastify/swagger-ui'
-import db from './lib/db.js'
 import AppError from './lib/AppError.js'
 import 'dotenv/config'
 
@@ -22,19 +21,22 @@ await server.register(fastifySwaggerUi, swaggerConfigUI)
 //       errorName: error.name,
 //       message: error.message,
 //       statusCode: error.statusCode,
+//       payload: error.payload,
 //     })
 //   }
-//   console.log({ name: error.name })
+//   // console.log({ name: error.name })
 //   return error
 // })
 
 server.register(authPlugin)
 server.register(routes)
 
-server.listen({ port: 8080 }, (err, address) => {
-  if (err) {
-    console.error(err)
-    process.exit(1)
-  }
-  console.log(`Server listening at ${address}`)
-})
+server.listen({ port: 8080 })
+
+// server.listen({ port: 8080 }, (err, address) => {
+//   if (err) {
+//     console.error(err)
+//     process.exit(1)
+//   }
+//   console.log(`Server listening at ${address}`)
+// })

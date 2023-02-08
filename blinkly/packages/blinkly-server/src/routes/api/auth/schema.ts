@@ -10,6 +10,7 @@ const authBodySchema = {
     username: { type: 'string' },
     password: { type: 'string' },
   },
+  required: ['username', 'password'],
 }
 
 // const authResultSchemaTest = {
@@ -53,7 +54,7 @@ const AuthResultSchema = {
   user: userResultSchema,
 }
 
-export const registerSchema = {
+export const registerSchema: FastifySchema = {
   body: authBodySchema,
   response: {
     200: AuthResultSchema,
@@ -65,7 +66,7 @@ export const registerSchema = {
   },
 }
 
-export const loginSchema = {
+export const loginSchema: FastifySchema = {
   body: authBodySchema,
   response: {
     200: AuthResultSchema,
@@ -74,5 +75,14 @@ export const loginSchema = {
       message: 'Invalid username or password',
       statusCode: 401,
     }),
+  },
+}
+
+export const refreshTokenSchema: FastifySchema = {
+  body: {
+    type: 'object',
+    properties: {
+      refreshToken: { type: 'string ' },
+    },
   },
 }

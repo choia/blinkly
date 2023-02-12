@@ -1,8 +1,9 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
-  body {
-    font-size: 20px;
 
+  body {
+    margin: 0;
+    font-size: 20px;
   }
 `

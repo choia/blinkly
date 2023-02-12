@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "transform:svg": "yarn svgr --typescript --out-dir src/components/vectors src/assets"
   },
   "dependencies": {
     "@next/font": "13.1.6",
@@ -22,6 +23,7 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
+    "@svgr/cli": "^6.5.1",
     "@types/styled-components": "^5.1.26",
     "babel-plugin-styled-components": "^2.0.7"
   }

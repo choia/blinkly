@@ -9,4 +9,6 @@ export const colors = {
 
   // use for test
   orange: 'orange',
+
+  primary: '#197BBD',
 }

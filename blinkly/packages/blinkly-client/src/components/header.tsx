@@ -21,21 +21,21 @@ const Header = ({ title = <Logo />, headerLeft, headerRight }: Props) => {
 const Block = styled.header`
   position: relative;
   height: 56px;
-  border-bottom: 1px solid ${colors.gray3};
+  border-bottom: 1px solid ${colors.gray4};
   padding-left: 16px;
   padding-right: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   svg {
-    color: ${colors.gray4};
+    color: ${colors.gray5};
     width: 58px;
     height: 18px;
   }
 `
 
 const Title = styled.div`
-  color: ${colors.gray3};
+  color: ${colors.gray5};
   font-size: 18px;
   font-weight: 600;
 `

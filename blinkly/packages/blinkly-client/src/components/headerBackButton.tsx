@@ -22,7 +22,6 @@ const IconButton = styled.button`
   justify-content: center;
   padding: 8px;
   margin-left: -8px;
-  background-color: red;
 `
 
 export default HeaderBackButton

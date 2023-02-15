@@ -6,7 +6,6 @@ const GlobalFullHeight = createGlobalStyle`
     height: 100%;
   }
 `
-
 interface Props {
   children: React.ReactNode
 }

@@ -15,6 +15,12 @@ const StyledInput = styled.input`
   font-size: 16px;
   padding: 0 16px;
   color: ${colors.gray5};
+  &:focus {
+    border: 1px solid ${colors.primary};
+  }
+  &:placeholder {
+    colors: ${colors.gray2};
+  }
 `
 
 export default Input

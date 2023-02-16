@@ -1,12 +1,12 @@
+import { ButtonHTMLAttributes } from 'react'
 import { colors } from '@/lib/colors'
-import { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth'
 }
 
-interface Props extends HTMLAttributes<HTMLButtonElement>, ButtonProps {}
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
 
 const Button = ({ layoutMode = 'inline', ...rest }: Props) => {
   return <StyledButton layoutMode={layoutMode} {...rest} />
@@ -25,6 +25,12 @@ const StyledButton = styled.button<ButtonProps>`
   padding-left: 16px;
   padding-right: 16px;
   font-weight: 600;
+  transition: filter 0.25s ease-in-out;
+
+  &:disabled {
+    filter: grayscale(0.6);
+  }
+
   ${(props) =>
     props.layoutMode === 'fullWidth' &&
     css`

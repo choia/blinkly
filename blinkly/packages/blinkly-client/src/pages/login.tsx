@@ -8,7 +8,10 @@ const Login = () => {
   const goBack = useGoBack()
   return (
     <FullHeightPage>
-      <Header title="Login" headerLeft={<HeaderBackButton onClick={goBack} />}></Header>
+      <Header
+        title="Login"
+        headerLeft={<HeaderBackButton onClick={goBack} />}
+      ></Header>
       <AuthForm mode="login" />
     </FullHeightPage>
   )

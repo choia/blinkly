@@ -1,3 +1,4 @@
+import { useTransition } from 'react'
 import styled from 'styled-components'
 import Button from './button'
 import LabelInput from './labelInput'
@@ -37,20 +38,33 @@ const AuthForm = ({ mode }: Props) => {
   } = authDescriptions[mode]
 
   return (
-    <Block>
+    <Block method="post" action="/api/register">
       <InputGroup>
-        <LabelInput label="Username" placeholder={usernamePlaceholder} />
-        <LabelInput label="Password" placeholder={passwordPlaceholder} />
+        <LabelInput
+          label="Username"
+          name="username"
+          placeholder={usernamePlaceholder}
+          minLength={8}
+        />
+        <LabelInput
+          label="Password"
+          name="password"
+          placeholder={passwordPlaceholder}
+          pattern="[a-z0-9]{1,12}"
+          title="Password should digits (0-9) or alpahbets (a-z)"
+        />
       </InputGroup>
       <ActionBox>
-        <Button layoutMode="fullWidth">{buttonText}</Button>
+        <Button type="submit" layoutMode="fullWidth">
+          {buttonText}
+        </Button>
         <QuestionLink name={actionText} question={question} to={actionLink} />
       </ActionBox>
     </Block>
   )
 }
 
-const Block = styled.div`
+const Block = styled.form`
   display: flex;
   flex-direction: column;
   padding: 16px;

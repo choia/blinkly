@@ -6,6 +6,10 @@ const meRoute: FastifyPluginAsync = async (fastify) => {
   fastify.register(requireAuthPlugin)
   fastify.get('/', { schema: getMeSchema }, async (request) => {
     return request.user
+    // return {
+    //   id: 'hello',
+    //   username: 'Hi',
+    // }
   })
 }
 

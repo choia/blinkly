@@ -82,7 +82,7 @@ export const refreshTokenSchema: FastifySchema = {
   body: {
     type: 'object',
     properties: {
-      refreshToken: { type: 'string ' },
+      refreshToken: { type: 'string' },
     },
   },
 }

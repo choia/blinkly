@@ -43,7 +43,7 @@ const Title = styled.div`
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
   position: absolute;
   ${(props) => props.position}: 16px;
-  top 0;
+  top: 0;
   height: 100%;
   display: flex;
   align-items: center;

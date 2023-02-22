@@ -9,10 +9,7 @@ const Register = () => {
 
   return (
     <FullHeightPage>
-      <Header
-        title="Register"
-        headerLeft={<HeaderBackButton onClick={goBack} />}
-      />
+      <Header title="Register" headerLeft={<HeaderBackButton onClick={goBack} />} />
       <AuthForm mode="register" />
     </FullHeightPage>
   )

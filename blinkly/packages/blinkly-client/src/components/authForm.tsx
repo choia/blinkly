@@ -1,4 +1,3 @@
-import { useTransition } from 'react'
 import styled from 'styled-components'
 import Button from './button'
 import LabelInput from './labelInput'
@@ -10,6 +9,7 @@ interface Props {
 
 const authDescriptions = {
   login: {
+    url: '/api/login',
     usernamePlaceholder: 'Enter Username',
     passwordPlaceholder: 'Enter Password',
     buttonText: 'Login',
@@ -18,6 +18,7 @@ const authDescriptions = {
     actionLink: '/register',
   },
   register: {
+    url: '/api/register',
     usernamePlaceholder: 'Must have at least 6 characters',
     passwordPlaceholder: 'Minimum 8 characters. Must contain letters & numbers',
     buttonText: 'Register',
@@ -29,6 +30,7 @@ const authDescriptions = {
 
 const AuthForm = ({ mode }: Props) => {
   const {
+    url,
     usernamePlaceholder,
     passwordPlaceholder,
     buttonText,
@@ -38,7 +40,7 @@ const AuthForm = ({ mode }: Props) => {
   } = authDescriptions[mode]
 
   return (
-    <Block method="post" action="/api/register">
+    <Block method="post" action={url}>
       <InputGroup>
         <LabelInput
           label="Username"
@@ -50,7 +52,8 @@ const AuthForm = ({ mode }: Props) => {
           label="Password"
           name="password"
           placeholder={passwordPlaceholder}
-          pattern="[a-z0-9]{1,12}"
+          // pattern="[a-z0-9]{1,12}"
+          minLength={8}
           title="Password should digits (0-9) or alpahbets (a-z)"
         />
       </InputGroup>

@@ -19,7 +19,7 @@ interface ErrorPayload {
   RefreshTokenError: undefined
 }
 
-interface AppError {
+export interface AppError {
   name: ErrorName
   message: string
   statusCode: number
@@ -32,16 +32,17 @@ export function isAppError(error: any): error is AppError {
   )
 }
 
-export function extractError(error: any): AppError | undefined {
+export function extractError(error: any): AppError {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data
     if (isAppError(data)) {
       return data
     }
-    return {
-      name: 'UnknownError',
-      message: 'Unknown Error',
-      statusCode: 500,
-    }
+  }
+
+  return {
+    name: 'UnknownError',
+    message: 'Unknown Error',
+    statusCode: 500,
   }
 }

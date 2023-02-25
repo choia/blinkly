@@ -1,10 +1,11 @@
 import { isValidPassword, isValidUsername } from '@/lib/regex'
-import register, { apiPostHandler } from '@/pages/api/register'
-import { useState } from 'react'
 import styled from 'styled-components'
 import Button from './button'
 import LabelInput from './labelInput'
 import QuestionLink from './questionLink'
+import axios, { AxiosError } from 'axios'
+import { FormEvent, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 interface Props {
   mode: 'login' | 'register'
@@ -13,7 +14,6 @@ interface Props {
 const authDescriptions = {
   login: {
     url: '/api/login',
-    url2: '/login',
     usernamePlaceholder: 'Enter Username',
     passwordPlaceholder: 'Enter Password',
     buttonText: 'Login',
@@ -23,7 +23,6 @@ const authDescriptions = {
   },
   register: {
     url: '/api/register',
-    url2: '/register',
     usernamePlaceholder: 'Must have at least 6 characters',
     passwordPlaceholder: 'Minimum 8 characters. Must contain letters & numbers',
     buttonText: 'Register',
@@ -36,7 +35,6 @@ const authDescriptions = {
 const AuthForm = ({ mode }: Props) => {
   const {
     url,
-    url2,
     usernamePlaceholder,
     passwordPlaceholder,
     buttonText,
@@ -45,66 +43,92 @@ const AuthForm = ({ mode }: Props) => {
     actionLink,
   } = authDescriptions[mode]
 
-  const [formData, setFormData] = useState({ usename: '', password: '' })
+  const [error, setError] = useState({ name: '', message: '', statusCode: 0 })
+  const [errors, setErrors] = useState({ name: '', errorMessage: '' })
 
-  const [isInvalidUsername, setIsInvalidUsername] = useState('')
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(e.target.name)
-    console.log(e.target.value)
+
+    setError({})
+    setErrors({})
 
     const form = new FormData(e.currentTarget)
     const username = form.get('username')
     const password = form.get('password')
 
     if (typeof username !== 'string' || typeof password !== 'string') {
-      // e.preventDefault()
+      e.preventDefault()
       return
     }
 
-    if (!isValidUsername(username) || !isValidPassword(password)) {
-      // e.preventDefault()
+    if (!isValidUsername(username)) {
+      console.log('ususususuhihihihihihi')
+      e.preventDefault()
+      setErrors({
+        name: 'username',
+        errorMessage: 'Must be 5-20 characters. (letter and numbers)',
+      })
+      return
+    }
+    if (!isValidPassword(password)) {
+      console.log('papapapaphihihihihihi')
+      e.preventDefault()
+      setErrors({
+        name: 'password',
+        errorMessage:
+          'Must be minimum 8 characters. Two types of letters, numbers, and special characters required',
+      })
       return
     }
 
-    // const jsonData = {
-    //   username,
-    //   password,
-    // }
+    console.log('hello2')
+    const data = {
+      username,
+      password,
+    }
 
-    // const endpoint = '/api/register'
-    // const options = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // }
-    // const response = await apiPostHandler(jsonData)
-    // console.log(response)
+    let config = {
+      method: 'POST',
+      url: '/api/register',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    }
+
+    try {
+      const response = await axios(config)
+      console.log('response after', response)
+    } catch (e: any) {
+      console.log(e.response.data.error)
+      setError(e.response.data.error)
+    }
   }
 
   return (
-    // <StyledForm method="post" action={url}>
-    <StyledForm method="POST" action={url} onSubmit={(e) => handleOnSubmit}>
+    <StyledForm method="POST" onSubmit={handleOnSubmit}>
       <InputGroup>
         <LabelInput
           label="Username"
           name="username"
-          // value="username"
           placeholder={usernamePlaceholder}
-          minLength={8}
+          // minLength={8}
+          errorMessage={errors.name === 'username' ? errors.errorMessage : null}
         />
         <LabelInput
           label="Password"
           name="password"
-          // value="password"
           placeholder={passwordPlaceholder}
           // pattern="[a-z0-9]{1,12}"
-          minLength={8}
           title="Password should digits (0-9) or alpahbets (a-z)"
+          minLength={8}
+          errorMessage={errors.name === 'password' ? errors.errorMessage : null}
         />
       </InputGroup>
       <ActionBox>
+        {error.name === 'UserExistsError' ? (
+          <ActionErrorMessage>Incorrect Account Information</ActionErrorMessage>
+        ) : null}
         <Button type="submit" layoutMode="fullWidth">
           {buttonText}
         </Button>
@@ -134,6 +158,12 @@ const ActionBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 24px;
+`
+
+const ActionErrorMessage = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: red;
 `
 
 export default AuthForm

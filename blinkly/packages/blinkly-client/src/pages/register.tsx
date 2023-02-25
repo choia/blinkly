@@ -17,8 +17,6 @@ import { useState } from 'react'
 const Register = () => {
   const goBack = useGoBack()
 
-  // const [error, setError] = useState(null)
-
   return (
     <FullHeightPage>
       <Header title="Register" headerLeft={<HeaderBackButton onClick={goBack} />} />
@@ -28,19 +26,3 @@ const Register = () => {
 }
 
 export default Register
-
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   try {
-//     console.log('@@error')
-//     const body = await parseBody(req, '1mb')
-//     const { result } = await apiPostHandler(body)
-//     const data = result.user
-//     console.log('@@@data', data)
-//   } catch (error) {
-//     console.log('hello', error)
-//   }
-//   console.log('@@serverside')
-//   return {
-//     props: {},
-//   }
-// }

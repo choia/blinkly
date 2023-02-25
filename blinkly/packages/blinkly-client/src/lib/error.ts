@@ -7,6 +7,7 @@ type ErrorName =
   | 'UnknownError'
   | 'BadRequestError'
   | 'RefreshTokenError'
+  | 'WrongCredentials'
 
 interface ErrorPayload {
   UserExistsError: undefined

@@ -1,5 +1,5 @@
 import { colors } from '@/lib/colors'
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import Input, { type Props as InputProps } from './input'
 
@@ -7,7 +7,7 @@ interface Props extends InputProps {
   label: string
 }
 
-const LabelInput = ({ label, ...rest }: Props) => {
+const LabelInput = forwardRef<HTMLInputElement, Props>(({ label, ...rest }: Props, ref) => {
   const [focused, setFocused] = useState(false)
   const onFocus = () => {
     setFocused(true)
@@ -19,10 +19,12 @@ const LabelInput = ({ label, ...rest }: Props) => {
   return (
     <Block>
       <Label focused={focused}>{label}</Label>
-      <Input onFocus={onFocus} onBlur={onBlur} {...rest} />
+      <Input onFocus={onFocus} onBlur={onBlur} {...rest} ref={ref} />
     </Block>
   )
-}
+})
+
+LabelInput.displayName = 'LabelInput'
 
 const Block = styled.div`
   display: flex;

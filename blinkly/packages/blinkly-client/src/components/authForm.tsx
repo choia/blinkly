@@ -6,6 +6,8 @@ import QuestionLink from './questionLink'
 import axios, { AxiosError } from 'axios'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { useAuthForm } from '@/hooks/useAuthForm'
+import { validate } from '@/lib/validate'
 
 interface Props {
   mode: 'login' | 'register'
@@ -38,6 +40,23 @@ const authDescriptions = {
 } as const
 
 const AuthForm = ({ mode }: Props) => {
+  const { inputProps, handleSubmit, errors } = useAuthForm({
+    mode: 'all',
+    form: {
+      username: {
+        validate: mode === 'register' ? validate.username : undefined,
+        validateErrorMessage: 'Must be 5-20 characters. (letter and numbers)',
+        initialValue: 'hello',
+      },
+      password: {
+        validate: mode === 'register' ? validate.password : undefined,
+        validateErrorMessage:
+          'Must be minimum 8 characters. Two types of letters, numbers, and special characters required',
+        initialValue: 'world',
+      },
+    },
+  })
+
   const {
     url,
     usernamePlaceholder,
@@ -48,23 +67,23 @@ const AuthForm = ({ mode }: Props) => {
     actionLink,
   } = authDescriptions[mode]
 
-  const { register, handleSubmit, formState, setError } = useForm<AuthUserProps>()
-  const onSubmit: SubmitHandler<AuthUserProps> = (data) => console.log('@@@onSubmit', data)
+  // const { register, handleSubmit, formState, setError } = useForm<AuthUserProps>()
+  // const onSubmit: SubmitHandler<AuthUserProps> = (data) => console.log('@@@onSubmit', data)
 
   const [serverError, setServerError] = useState({ name: '', message: '', statusCode: 0 })
-  // console.log(watch('username'))
-  const { errors } = formState
-  console.log('@@@@formstate', formState.errors)
+  // // console.log(watch('username'))
+  // const { errors } = formState
+  // console.log('@@@@formstate', formState.errors)
 
   const usernameErrorMessage = useMemo(() => {
-    if (formState.errors.username) {
+    if (errors.username) {
       return 'Must be 5-20 characters. (letter and numbers)'
     }
     if (serverError.name === 'UserExistsError') {
       return 'Account already exists'
     }
     return undefined
-  }, [serverError, formState])
+  }, [serverError, errors.username])
 
   // const [errors, setErrors] = useState({ name: '', errorMessage: '' })
 
@@ -126,40 +145,34 @@ const AuthForm = ({ mode }: Props) => {
   //     setError(e.response.data.error)
   //   }
   // }
+  const onSubmit = handleSubmit((values) => {
+    console.log(values)
+  })
 
   return (
-    <StyledForm method="POST" onSubmit={handleSubmit(onSubmit)}>
-      {/* <StyledForm method="POST" onSubmit={handleOnSubmit}> */}
+    // <StyledForm method="POST" onSubmit={handleSubmit(onSubmit)}>
+    <StyledForm method="POST" onSubmit={onSubmit}>
       <InputGroup>
         <LabelInput
           label="Username"
-          // name="username"
           placeholder={usernamePlaceholder}
-          {...register('username', { required: true, minLength: 5, maxLength: 20 })}
-          // minLength={8}
-          // errorMessage={errors.name === 'username' ? errors.errorMessage : null}
+          // {...register('username', { required: true, minLength: 5, maxLength: 20 })}
           errorMessage={usernameErrorMessage}
+          {...inputProps.username}
         />
         <LabelInput
           label="Password"
-          // name="password"
           placeholder={passwordPlaceholder}
-          // pattern="[a-z0-9]{1,12}"
           title="Password should digits (0-9) or alpahbets (a-z)"
-          // minLength={8}
-          {...register('password', { required: true, minLength: 8, maxLength: 20 })}
-          // errorMessage={errors.name === 'password' ? errors.errorMessage : null}
-          errorMessage={
-            formState.errors.password
-              ? 'Minimum 8 characters, 2 types of letters, numbers or special chars'
-              : undefined
-          }
+          // {...register('password', { required: true, minLength: 8, maxLength: 20 })}
+          errorMessage={errors.password}
+          {...inputProps.password}
         />
       </InputGroup>
       <ActionBox>
-        {/* {error.name === 'UserExistsError' ? (
+        {serverError.name === 'AuthenticationError' ? (
           <ActionErrorMessage>Incorrect Account Information</ActionErrorMessage>
-        ) : null} */}
+        ) : null}
         <Button type="submit" layoutMode="fullWidth">
           {buttonText}
         </Button>

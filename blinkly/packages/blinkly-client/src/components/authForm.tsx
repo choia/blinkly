@@ -54,21 +54,14 @@ const AuthForm = ({ mode }: Props) => {
     },
   })
 
-  const {
-    url,
-    usernamePlaceholder,
-    passwordPlaceholder,
-    buttonText,
-    actionText,
-    question,
-    actionLink,
-  } = authDescriptions[mode]
+  const { usernamePlaceholder, passwordPlaceholder, buttonText, actionText, question, actionLink } =
+    authDescriptions[mode]
 
   const [serverError, setServerError] = useState({ name: '', message: '', statusCode: 0 })
 
   const onSubmit = handleSubmit(() => {
     if (mode === 'register') {
-      console.log(errors)
+      console.log('hi')
     }
   })
 

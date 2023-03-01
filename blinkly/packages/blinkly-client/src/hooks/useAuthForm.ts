@@ -1,20 +1,30 @@
+import axios from 'axios'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { validate } from './../lib/validate'
 
 interface FormInputConfig {
   name?: string
-  validate?: (text: string) => boolean
+  validate?(text: string): boolean
   initialValue?: string
   validateErrorMessage?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
 }
 
 type ValidateMode = 'all' | 'change' | 'submit' | 'blur'
 
+interface PostApiConfig<T extends string> {
+  method: string
+  url: string
+  headers: Record<string, string>
+  data?: Record<T, string>
+}
 interface UseFormParams<T extends string> {
   mode?: ValidateMode
   form: Record<T, FormInputConfig>
   initialValues?: Record<T, string>
   shouldPreventDefault?: boolean
+  config?: PostApiConfig<T>
 }
 
 type InputTypeRecord<T extends string> = Record<T, InputProps>
@@ -22,6 +32,7 @@ type CustomSubmitFn<T extends string> = (
   values: Record<T, string>,
   e: React.FormEvent<HTMLFormElement>,
 ) => void
+
 type HandleSubmitFn<T extends string> = (
   onSubmit: CustomSubmitFn<T>,
 ) => (e: React.FormEvent<HTMLFormElement>) => void
@@ -86,11 +97,13 @@ export function useAuthForm<T extends string>(params: UseFormParams<T>) {
       partialInputProps[key] = {
         name: key,
         onChange: (e) => {
+          params.form[key].onChange?.(e)
           const modes: ValidateMode[] = ['change', 'all']
           if (!modes.includes(mode)) return
           handleValidation(e.target.value)
         },
         onBlur: (e) => {
+          params.form[key].onBlur?.(e)
           const modes: ValidateMode[] = ['blur', 'all']
           if (!modes.includes(mode)) return
           handleValidation(e.target.value)
@@ -105,9 +118,10 @@ export function useAuthForm<T extends string>(params: UseFormParams<T>) {
 
   const handleSubmit: HandleSubmitFn<T> = useCallback(
     (onSubmit) => {
-      return (e) => {
+      return async (e) => {
         const formData = new FormData(e.currentTarget)
         const formDataJSON = Object.fromEntries(formData) as Record<T, string>
+        console.log('formdatajson', formDataJSON)
         const keys = Object.keys(params.form) as T[]
         let errorCounter = 0
         keys.forEach((key) => {
@@ -125,6 +139,16 @@ export function useAuthForm<T extends string>(params: UseFormParams<T>) {
         if (params.shouldPreventDefault ?? true) {
           e.preventDefault()
         }
+        const config = params.config as PostApiConfig<T>
+        config.data = formDataJSON
+
+        try {
+          const response = await axios(config)
+          console.log(response)
+        } catch (e: any) {
+          console.log(e.response.data.name, e.response.data.error.message)
+        }
+
         onSubmit(formDataJSON, e)
       }
     },
@@ -142,5 +166,5 @@ export function useAuthForm<T extends string>(params: UseFormParams<T>) {
     })
   }, [params.form, params.initialValues])
 
-  return { inputProps, handleSubmit, errors }
+  return { inputProps, handleSubmit, errors, setError }
 }

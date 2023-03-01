@@ -40,20 +40,24 @@ const authDescriptions = {
 } as const
 
 const AuthForm = ({ mode }: Props) => {
-  const { inputProps, handleSubmit, errors } = useAuthForm({
+  const { inputProps, handleSubmit, errors, setError } = useAuthForm({
     mode: 'all',
     form: {
       username: {
         validate: mode === 'register' ? validate.username : undefined,
         validateErrorMessage: 'Must be 5-20 characters. (letter and numbers)',
-        initialValue: 'hello',
       },
       password: {
         validate: mode === 'register' ? validate.password : undefined,
         validateErrorMessage:
           'Must be minimum 8 characters. Two types of letters, numbers, and special characters required',
-        initialValue: 'world',
       },
+    },
+    shouldPreventDefault: true,
+    config: {
+      method: 'Post',
+      url: '/api/register',
+      headers: { 'Content-Type': 'application/json' },
     },
   })
 
@@ -71,19 +75,16 @@ const AuthForm = ({ mode }: Props) => {
   // const onSubmit: SubmitHandler<AuthUserProps> = (data) => console.log('@@@onSubmit', data)
 
   const [serverError, setServerError] = useState({ name: '', message: '', statusCode: 0 })
-  // // console.log(watch('username'))
-  // const { errors } = formState
-  // console.log('@@@@formstate', formState.errors)
 
-  const usernameErrorMessage = useMemo(() => {
-    if (errors.username) {
-      return 'Must be 5-20 characters. (letter and numbers)'
-    }
-    if (serverError.name === 'UserExistsError') {
-      return 'Account already exists'
-    }
-    return undefined
-  }, [serverError, errors.username])
+  // const usernameErrorMessage = useMemo(() => {
+  //   if (errors.username) {
+  //     return 'Must be 5-20 characters. (letter and numbers)'
+  //   }
+  //   if (serverError.name === 'UserExistsError') {
+  //     return 'Account already exists'
+  //   }
+  //   return undefined
+  // }, [serverError, errors.username])
 
   // const [errors, setErrors] = useState({ name: '', errorMessage: '' })
 
@@ -128,14 +129,14 @@ const AuthForm = ({ mode }: Props) => {
   //     password,
   //   }
 
-  //   let config = {
-  //     method: 'POST',
-  //     url: '/api/register',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     data: data,
-  //   }
+  // let config = {
+  //   method: 'POST',
+  //   url: '/api/register',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   data: data,
+  // }
 
   //   try {
   //     const response = await axios(config)
@@ -145,9 +146,20 @@ const AuthForm = ({ mode }: Props) => {
   //     setError(e.response.data.error)
   //   }
   // }
-  const onSubmit = handleSubmit((values) => {
-    console.log(values)
+  // const onSubmit = handleSubmit((values) => {
+  //   console.log(values)
+  // })
+  const onSubmit = handleSubmit(() => {
+    if (mode === 'register') {
+      console.log(errors)
+    }
   })
+
+  useEffect(() => {
+    if (serverError?.name === 'UserExistsError') {
+      setError('username', 'User already exists')
+    }
+  }, [serverError, setError])
 
   return (
     // <StyledForm method="POST" onSubmit={handleSubmit(onSubmit)}>
@@ -156,15 +168,12 @@ const AuthForm = ({ mode }: Props) => {
         <LabelInput
           label="Username"
           placeholder={usernamePlaceholder}
-          // {...register('username', { required: true, minLength: 5, maxLength: 20 })}
-          errorMessage={usernameErrorMessage}
+          errorMessage={errors.username}
           {...inputProps.username}
         />
         <LabelInput
           label="Password"
           placeholder={passwordPlaceholder}
-          title="Password should digits (0-9) or alpahbets (a-z)"
-          // {...register('password', { required: true, minLength: 8, maxLength: 20 })}
           errorMessage={errors.password}
           {...inputProps.password}
         />

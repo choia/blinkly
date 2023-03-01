@@ -1,21 +1,14 @@
-import { isValidPassword, isValidUsername } from '@/lib/regex'
 import styled from 'styled-components'
 import Button from './button'
 import LabelInput from './labelInput'
 import QuestionLink from './questionLink'
-import axios, { AxiosError } from 'axios'
-import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+
+import { useEffect, useMemo, useState } from 'react'
 import { useAuthForm } from '@/hooks/useAuthForm'
 import { validate } from '@/lib/validate'
 
 interface Props {
   mode: 'login' | 'register'
-}
-
-interface AuthUserProps {
-  username: string
-  password: string
 }
 
 const authDescriptions = {
@@ -71,84 +64,8 @@ const AuthForm = ({ mode }: Props) => {
     actionLink,
   } = authDescriptions[mode]
 
-  // const { register, handleSubmit, formState, setError } = useForm<AuthUserProps>()
-  // const onSubmit: SubmitHandler<AuthUserProps> = (data) => console.log('@@@onSubmit', data)
-
   const [serverError, setServerError] = useState({ name: '', message: '', statusCode: 0 })
 
-  // const usernameErrorMessage = useMemo(() => {
-  //   if (errors.username) {
-  //     return 'Must be 5-20 characters. (letter and numbers)'
-  //   }
-  //   if (serverError.name === 'UserExistsError') {
-  //     return 'Account already exists'
-  //   }
-  //   return undefined
-  // }, [serverError, errors.username])
-
-  // const [errors, setErrors] = useState({ name: '', errorMessage: '' })
-
-  // const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-
-  //   setError({})
-  //   setErrors({})
-
-  //   const form = new FormData(e.currentTarget)
-  //   const username = form.get('username')
-  //   const password = form.get('password')
-
-  //   if (typeof username !== 'string' || typeof password !== 'string') {
-  //     e.preventDefault()
-  //     return
-  //   }
-
-  //   if (!isValidUsername(username)) {
-  //     console.log('ususususuhihihihihihi')
-  //     e.preventDefault()
-  //     setErrors({
-  //       name: 'username',
-  //       errorMessage: 'Must be 5-20 characters. (letter and numbers)',
-  //     })
-  //     return
-  //   }
-  //   if (!isValidPassword(password)) {
-  //     console.log('papapapaphihihihihihi')
-  //     e.preventDefault()
-  //     setErrors({
-  //       name: 'password',
-  //       errorMessage:
-  //         'Must be minimum 8 characters. Two types of letters, numbers, and special characters required',
-  //     })
-  //     return
-  //   }
-
-  //   console.log('hello2')
-  //   const data = {
-  //     username,
-  //     password,
-  //   }
-
-  // let config = {
-  //   method: 'POST',
-  //   url: '/api/register',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data: data,
-  // }
-
-  //   try {
-  //     const response = await axios(config)
-  //     console.log('response after', response)
-  //   } catch (e: any) {
-  //     console.log(e.response.data.error)
-  //     setError(e.response.data.error)
-  //   }
-  // }
-  // const onSubmit = handleSubmit((values) => {
-  //   console.log(values)
-  // })
   const onSubmit = handleSubmit(() => {
     if (mode === 'register') {
       console.log(errors)
@@ -162,7 +79,6 @@ const AuthForm = ({ mode }: Props) => {
   }, [serverError, setError])
 
   return (
-    // <StyledForm method="POST" onSubmit={handleSubmit(onSubmit)}>
     <StyledForm method="POST" onSubmit={onSubmit}>
       <InputGroup>
         <LabelInput

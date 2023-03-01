@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import Button from './button'
-import LabelInput from './labelInput'
+import Button from '../../common/button'
+import LabelInput from '../../common/labelInput'
 import QuestionLink from './questionLink'
 
 import { useEffect, useMemo, useState } from 'react'

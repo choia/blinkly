@@ -1,7 +1,7 @@
-import AuthForm from '@/components/authForm'
-import FullHeightPage from '@/components/fullHeightPage'
-import Header from '@/components/header'
-import HeaderBackButton from '@/components/headerBackButton'
+import AuthForm from '@/components/layouts/auth/authForm'
+import FullHeightPage from '@/components/common/fullHeightPage'
+import Header from '@/components/layouts/header/header'
+import HeaderBackButton from '@/components/layouts/header/headerBackButton'
 import useGoBack from '@/hooks/useGoBack'
 
 const Login = () => {

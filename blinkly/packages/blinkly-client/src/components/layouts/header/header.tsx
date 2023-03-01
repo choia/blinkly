@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { colors } from '../lib/colors'
-import { Logo } from './vectors'
+import { colors } from '../../../lib/colors'
+import { Logo } from '../../vectors'
 
 interface Props {
   title?: React.ReactNode
@@ -21,13 +21,14 @@ const Header = ({ title = <Logo />, headerLeft, headerRight }: Props) => {
 const Block = styled.header`
   position: relative;
   height: 56px;
-  border-bottom: 1px solid ${colors.gray4};
+  border-bottom: 1px solid ${colors.gray2};
   padding-left: 16px;
   padding-right: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   svg {
+    display: block;
     color: ${colors.gray5};
     width: 58px;
     height: 18px;

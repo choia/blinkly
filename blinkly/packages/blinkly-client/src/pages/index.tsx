@@ -1,8 +1,8 @@
 import Head from 'next/head'
+import styled from 'styled-components'
+import FullHeightPage from '@/components/common/fullHeightPage'
 import Header from '@/components/layouts/header/header'
 import Footer from '@/components/layouts/footer/footer'
-import FullHeightPage from '@/components/common/fullHeightPage'
-import styled from 'styled-components'
 
 export default function Home() {
   return (

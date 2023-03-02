@@ -1,18 +1,8 @@
-import AuthForm from '@/components/layouts/auth/authForm'
+import useGoBack from '@/hooks/useGoBack'
 import FullHeightPage from '@/components/common/fullHeightPage'
 import Header from '@/components/layouts/header/header'
-import HeaderBackButton from '@/components/headerBackButton'
-import useGoBack from '@/hooks/useGoBack'
-import { GetServerSideProps, GetStaticProps } from 'next'
-import { extractError } from '@/lib/error'
-import axios from 'axios'
-import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallback } from './error'
-import { AuthParams, AuthResult } from './api/types/authTypes'
-import useSWR from 'swr'
-import { parseBody } from 'next/dist/server/api-utils/node'
-import { apiPostHandler } from './api/register'
-import { useState } from 'react'
+import HeaderBackButton from '@/components/layouts/header/headerBackButton'
+import AuthForm from '@/components/layouts/auth/authForm'
 
 const Register = () => {
   const goBack = useGoBack()

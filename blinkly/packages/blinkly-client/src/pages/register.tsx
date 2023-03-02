@@ -1,17 +1,11 @@
-import useGoBack from '@/hooks/useGoBack'
-import FullHeightPage from '@/components/common/fullHeightPage'
-import Header from '@/components/layouts/header/header'
-import HeaderBackButton from '@/components/layouts/header/headerBackButton'
+import BasicTemplate from '@/components/templates/basicTemplate'
 import AuthForm from '@/components/layouts/auth/authForm'
 
 const Register = () => {
-  const goBack = useGoBack()
-
   return (
-    <FullHeightPage>
-      <Header title="Register" headerLeft={<HeaderBackButton onClick={goBack} />} />
+    <BasicTemplate title="register" hasBackButton>
       <AuthForm mode="register" />
-    </FullHeightPage>
+    </BasicTemplate>
   )
 }
 

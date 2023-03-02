@@ -5,11 +5,11 @@ import FooterItem from './footerItem'
 const Footer = () => {
   return (
     <StyledFooter>
-      <FooterItem />
-      <FooterItem />
-      <FooterItem />
-      <FooterItem />
-      <FooterItem />
+      <FooterItem icon="home" href="/" />
+      <FooterItem icon="search" href="/search" />
+      <FooterItem icon="plusCircle" href="/write" />
+      <FooterItem icon="bookmark" href="/bookmarks" />
+      <FooterItem icon="setting" href="/setting" />
     </StyledFooter>
   )
 }

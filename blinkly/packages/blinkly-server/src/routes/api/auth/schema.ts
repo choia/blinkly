@@ -1,31 +1,18 @@
 import { FastifySchema } from 'fastify'
+import { Static, Type } from '@sinclair/typebox'
 import {
   appErrorSchema,
   createAppErrorSchema,
 } from './../../../lib/AppError.js'
 
-const authBodySchema = {
-  type: 'object',
-  properties: {
-    username: { type: 'string' },
-    password: { type: 'string' },
-  },
-  required: ['username', 'password'],
-}
+export const AuthBody = Type.Object({
+  username: Type.String(),
+  password: Type.String(),
+})
 
-// const authResultSchemaTest = {
-//   type: 'object',
-//   properties: {
-//     tokens: {
-//       type: 'object',
-//       properties: {
-//         accessToken: { type: 'string' },
-//         refreshToken: { type: 'string' },
-//       },
-//     },
-//     user: userSchema,
-//   },
-// }
+export const AuthResult = Type.Object({})
+
+export type AuthBodyType = Static<typeof AuthBody>
 
 const tokenResultSchema = {
   type: 'object',
@@ -55,7 +42,7 @@ const AuthResultSchema = {
 }
 
 export const registerSchema: FastifySchema = {
-  body: authBodySchema,
+  body: AuthBody,
   response: {
     200: AuthResultSchema,
     409: createAppErrorSchema({
@@ -67,7 +54,7 @@ export const registerSchema: FastifySchema = {
 }
 
 export const loginSchema: FastifySchema = {
-  body: authBodySchema,
+  body: AuthBody,
   response: {
     200: AuthResultSchema,
     401: createAppErrorSchema({

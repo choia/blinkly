@@ -10,42 +10,28 @@ export const AuthBody = Type.Object({
   password: Type.String(),
 })
 
-export const AuthResult = Type.Object({})
-
 export type AuthBodyType = Static<typeof AuthBody>
 
-const tokenResultSchema = {
-  type: 'object',
-  properties: {
-    accessToken: { type: 'string' },
-    refreshToken: { type: 'string' },
-  },
-  example: {
-    accessToken: 'helloworld',
-  },
-}
+export const TokensSchema = Type.Object({
+  accessToken: Type.String(),
+  refreshToken: Type.String(),
+})
 
-const userResultSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'string' },
-    username: { type: 'string' },
-  },
-  example: {
-    id: 'myname',
-  },
-}
+const UserSchema = Type.Object({
+  id: Type.String(),
+  username: Type.String(),
+})
 
-const authResultSchema = {
-  tokens: tokenResultSchema,
-  user: userResultSchema,
-}
+const AuthResult = Type.Object({
+  tokens: TokensSchema,
+  user: UserSchema,
+})
 
 export const registerSchema: FastifySchema = {
   tags: ['auth'],
   body: AuthBody,
   response: {
-    200: authResultSchema,
+    200: AuthResult,
     409: createAppErrorSchema({
       name: 'UserExistsError',
       message: 'User already exists',
@@ -58,7 +44,7 @@ export const loginSchema: FastifySchema = {
   tags: ['auth'],
   body: AuthBody,
   response: {
-    200: authResultSchema,
+    200: AuthResult,
     401: createAppErrorSchema({
       name: 'AuthenticationError',
       message: 'Invalid username or password',
@@ -67,12 +53,19 @@ export const loginSchema: FastifySchema = {
   },
 }
 
+const RefreshTokenBody = Type.Object({
+  refreshToken: Type.String(),
+})
+
 export const refreshTokenSchema: FastifySchema = {
   tags: ['auth'],
-  body: {
-    type: 'object',
-    properties: {
-      refreshToken: { type: 'string' },
-    },
+  body: RefreshTokenBody,
+  response: {
+    200: TokensSchema,
+    401: createAppErrorSchema({
+      name: 'RefreshTokenError',
+      message: 'Failed to refresh token',
+      statusCode: 401,
+    }),
   },
 }

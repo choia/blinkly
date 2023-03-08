@@ -12,8 +12,7 @@ interface AuthParams {
 const SALT_ROUNDS = 10
 
 class UserService {
-  public static instance: UserService
-
+  private static instance: UserService
   public static getInstance() {
     if (!UserService.instance) {
       UserService.instance = new UserService()

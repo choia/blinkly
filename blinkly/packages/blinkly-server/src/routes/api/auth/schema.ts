@@ -36,15 +36,16 @@ const userResultSchema = {
   },
 }
 
-const AuthResultSchema = {
+const authResultSchema = {
   tokens: tokenResultSchema,
   user: userResultSchema,
 }
 
 export const registerSchema: FastifySchema = {
+  tags: ['auth'],
   body: AuthBody,
   response: {
-    200: AuthResultSchema,
+    200: authResultSchema,
     409: createAppErrorSchema({
       name: 'UserExistsError',
       message: 'User already exists',
@@ -54,9 +55,10 @@ export const registerSchema: FastifySchema = {
 }
 
 export const loginSchema: FastifySchema = {
+  tags: ['auth'],
   body: AuthBody,
   response: {
-    200: AuthResultSchema,
+    200: authResultSchema,
     401: createAppErrorSchema({
       name: 'AuthenticationError',
       message: 'Invalid username or password',
@@ -66,6 +68,7 @@ export const loginSchema: FastifySchema = {
 }
 
 export const refreshTokenSchema: FastifySchema = {
+  tags: ['auth'],
   body: {
     type: 'object',
     properties: {

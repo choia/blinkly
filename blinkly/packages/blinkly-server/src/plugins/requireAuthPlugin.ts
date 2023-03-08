@@ -16,3 +16,11 @@ const requireAuthPluginAsync: FastifyPluginAsync = async (fastify) => {
 export const requireAuthPlugin = fp(requireAuthPluginAsync, {
   name: 'requireAuthPlugin',
 })
+
+export function createAuthorizedRoute(plugin: FastifyPluginAsync) {
+  const wrappedPlugin: FastifyPluginAsync = async (fastify, opts) => {
+    fastify.register(requireAuthPlugin)
+    return plugin(fastify, opts)
+  }
+  return wrappedPlugin
+}

@@ -45,6 +45,8 @@ model Item {
   userId     Int
   siteInfoId Int?
   itemsTags  ItemsTags[]
+
+  @@index([createdAt(sort: Desc)])
 }
 
 model SiteInfo {

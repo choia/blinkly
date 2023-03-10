@@ -7,6 +7,7 @@ import {
   GetItemRoute,
   GetItemSchema,
   GetItemsRoute,
+  GetItemsSchema,
   WriteItemRoute,
   WriteItemSchema,
 } from './schema.js'
@@ -25,13 +26,17 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
-  fastify.get<GetItemsRoute>('/', async (request) => {
-    const { cursor } = request.query
-    return await itemService.getAllItems({
-      mode: 'recent',
-      cursor: cursor ? parseInt(cursor, 10) : null,
-    })
-  })
+  fastify.get<GetItemsRoute>(
+    '/',
+    { schema: GetItemsSchema },
+    async (request) => {
+      const { cursor } = request.query
+      return await itemService.getAllItems({
+        mode: 'recent',
+        cursor: cursor ? parseInt(cursor, 10) : null,
+      })
+    },
+  )
 }
 
 const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {

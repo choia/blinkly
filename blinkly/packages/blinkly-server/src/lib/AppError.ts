@@ -5,6 +5,7 @@ type ErrorName =
   | 'UnknownError'
   | 'BadRequestError'
   | 'RefreshTokenError'
+  | 'NotFoundError'
 
 type ErrorInfo = {
   message: string
@@ -20,6 +21,7 @@ interface ErrorPayload {
   }
   BadRequestError: undefined
   RefreshTokenError: undefined
+  NotFoundError: undefined
 }
 
 const statusCodeMap: Record<ErrorName, ErrorInfo> = {
@@ -47,6 +49,10 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
     message: 'Failed to refresh token',
     statusCode: 401,
   },
+  NotFoundError: {
+    message: 'Not Found',
+    statusCode: 404,
+  },
 }
 
 export default class AppError extends Error {
@@ -56,7 +62,9 @@ export default class AppError extends Error {
     public name: ErrorName,
     public payload?: ErrorPayload[ErrorName],
   ) {
-    const info = statusCodeMap[name]
+    let info = statusCodeMap[name]
+    // console.log(name)
+    // console.log(info)
     super(info.message)
     this.statusCode = info.statusCode
   }

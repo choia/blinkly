@@ -1,6 +1,7 @@
 import db from '../lib/db.js'
 import { CreateItemBodyType } from './../routes/api/items/schema.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
+import AppError from '../lib/AppError.js'
 class ItemService {
   private static instance: ItemService
   public static getInstance() {
@@ -37,6 +38,9 @@ class ItemService {
         user: true,
       },
     })
+    if (!item) {
+      throw new AppError('NotFoundError')
+    }
     return item
   }
 

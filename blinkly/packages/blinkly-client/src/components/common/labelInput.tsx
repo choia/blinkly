@@ -31,12 +31,12 @@ const Block = styled.div`
   flex-direction: column;
 `
 const Label = styled.div<{ focused: boolean }>`
-  font-size: 16px;
-  line-height: 1.5;
   color: ${colors.gray4};
+  font-size: 16px;
   font-weight: 600;
-  /* background: red; */
+  line-height: 1.5;
   margin-bottom: 8px;
+  transition: all 0.25s ease-in-out;
   ${(props) =>
     props.focused &&
     css`

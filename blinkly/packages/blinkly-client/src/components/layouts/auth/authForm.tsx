@@ -33,7 +33,7 @@ const authDescriptions = {
 } as const
 
 const AuthForm = ({ mode }: Props) => {
-  const { inputProps, handleSubmit, errors, setError } = useAuthForm({
+  const { inputProps, handleSubmit, errors, setError, data } = useAuthForm({
     mode: 'all',
     form: {
       username: {
@@ -49,21 +49,24 @@ const AuthForm = ({ mode }: Props) => {
     shouldPreventDefault: true,
     config: {
       method: 'Post',
-      url: '/api/register',
+      url: mode === 'login' ? '/api/login' : '/api/register',
       headers: { 'Content-Type': 'application/json' },
     },
   })
 
-  const { usernamePlaceholder, passwordPlaceholder, buttonText, actionText, question, actionLink } =
-    authDescriptions[mode]
+  const {
+    usernamePlaceholder,
+    passwordPlaceholder,
+    buttonText,
+    actionText,
+    question,
+    actionLink,
+    url,
+  } = authDescriptions[mode]
 
   const [serverError, setServerError] = useState({ name: '', message: '', statusCode: 0 })
 
-  const onSubmit = handleSubmit(() => {
-    if (mode === 'register') {
-      console.log('hi')
-    }
-  })
+  const onSubmit = handleSubmit(() => {})
 
   useEffect(() => {
     if (serverError?.name === 'UserExistsError') {
@@ -84,6 +87,7 @@ const AuthForm = ({ mode }: Props) => {
           label="Password"
           placeholder={passwordPlaceholder}
           errorMessage={errors.password}
+          type="password"
           {...inputProps.password}
         />
       </InputGroup>

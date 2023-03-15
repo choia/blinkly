@@ -1,10 +1,10 @@
 import type { NextApiRequest } from 'next'
 import { setClientCookie } from '@/lib/client'
 
-export function applyAuth(request: NextApiRequest) {
-  // const cookie = request.headers.get('cookie')
-  const cookie = request.headers.cookie
-  console.log('@@COOKIE', cookie)
+export function applyAuth(req) {
+  const cookie = req.headers.get('Cookie')
+  console.log('cookie', cookie)
+
   if (!cookie || !cookie.includes('token')) {
     return false
   }

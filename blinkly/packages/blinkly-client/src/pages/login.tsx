@@ -1,5 +1,6 @@
 import BasicTemplate from '@/components/templates/basicTemplate'
 import AuthForm from '@/components/layouts/auth/authForm'
+import { NextApiRequest } from 'next/types'
 
 const Login = () => {
   return (

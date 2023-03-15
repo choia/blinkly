@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 interface FormInputConfig {
   name?: string
@@ -52,6 +52,7 @@ export function useAuthForm<T extends string>({
   shouldPreventDefault,
   config,
 }: UseFormParams<T>) {
+  const [data, setData] = useState<AxiosResponse<any, any>>()
   const [errors, setErrors] = useState<Partial<Record<T, string | null>>>({})
   const errorRef = useRef(errors)
   const setError = useCallback((key: T, error: string | undefined | null) => {
@@ -131,7 +132,8 @@ export function useAuthForm<T extends string>({
 
         try {
           const response = await axios(config)
-          console.log(response)
+          setData(response.data)
+          // console.log(response)
         } catch (e: any) {
           console.log(e.response.data.name, e.response.data.error.message)
         }
@@ -153,5 +155,5 @@ export function useAuthForm<T extends string>({
     })
   }, [form, initialValues])
 
-  return { inputProps, handleSubmit, errors, setError }
+  return { inputProps, handleSubmit, errors, setError, data }
 }

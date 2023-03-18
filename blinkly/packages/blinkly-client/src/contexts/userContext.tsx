@@ -1,4 +1,4 @@
-import { User } from '../pages/api/types/authTypes'
+import { User } from '../pages/api/types'
 import { createContext, useContext, useState } from 'react'
 
 interface Props {

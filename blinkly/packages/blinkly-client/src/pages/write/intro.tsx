@@ -10,8 +10,11 @@ import { PostApiConfig } from '@/lib/apiConfig'
 import { applyAuth } from '@/lib/applyAuth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextPageContext } from 'next/types'
+import { useRouter } from 'next/router'
 
 function Intro({ cookies }) {
+  const router = useRouter()
+
   const {
     state: { link },
     actions,
@@ -55,6 +58,7 @@ function Intro({ cookies }) {
     try {
       const response = await axios(config)
       console.log('7777777', response)
+      router.push('/')
     } catch (e: any) {
       console.log(e)
     }
@@ -94,8 +98,8 @@ function Intro({ cookies }) {
   )
 }
 
-export async function getServerSideProps(req: NextApiRequest) {
-  // const { req } = context
+export async function getServerSideProps(context: NextPageContext) {
+  const { req } = context
   const cookies = req.cookies
 
   return {

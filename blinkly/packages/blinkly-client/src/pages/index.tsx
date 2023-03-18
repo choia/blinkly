@@ -14,7 +14,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    if (router.pathname === '/' && state.url !== '') {
+    if (router.pathname === '/' && state.link !== '') {
       actions.reset()
     }
   }, [state, actions, router.pathname])

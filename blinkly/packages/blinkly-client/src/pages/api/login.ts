@@ -1,10 +1,10 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { AuthParams, AuthResult } from './types/authTypes'
+import { AuthParams, AuthResult } from './types'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { result, cookieHeader } = await apiPostHandler(req.body)
+    const { result, cookieHeader } = await loginPostApi(req.body)
     const { id, username } = result.user
 
     res.setHeader('Set-Cookie', cookieHeader)
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-const apiPostHandler = async (params: AuthParams) => {
+const loginPostApi = async (params: AuthParams) => {
   const url = 'http://localhost:8080/api/auth/login'
   const response = await axios.post<AuthResult>(url, params)
   const result = response.data

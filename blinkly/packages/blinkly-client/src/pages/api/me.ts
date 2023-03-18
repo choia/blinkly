@@ -2,7 +2,7 @@ import { client, setClientCookie } from '@/lib/client'
 import { extractError, isAppError } from '@/lib/error'
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { AuthResult } from './types/authTypes'
+import { AuthResult } from './types'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {

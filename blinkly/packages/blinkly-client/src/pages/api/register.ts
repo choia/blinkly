@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { extractError } from '@/lib/error'
-import { AuthParams, AuthResult } from './types/authTypes'
+import { AuthParams, AuthResult } from './types'
 
 export default async function register(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

@@ -56,7 +56,7 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
     statusCode: 404,
   },
   ForbiddenError: {
-    message: 'FOrbidden',
+    message: 'Forbidden',
     statusCode: 403,
   },
 }

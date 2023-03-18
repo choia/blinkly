@@ -15,6 +15,7 @@ class ItemService {
     userId: number,
     { title, body, link, tags }: CreateItemBodyType,
   ) {
+    console.log('1212121212', userId, body)
     const item = await db.item.create({
       data: {
         title,

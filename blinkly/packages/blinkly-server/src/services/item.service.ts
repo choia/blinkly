@@ -2,6 +2,7 @@ import db from '../lib/db.js'
 import { CreateItemBodyType } from './../routes/api/items/schema.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
 import AppError from '../lib/AppError.js'
+import { extractPageInfo } from '../lib/extractPageInfo.js'
 class ItemService {
   private static instance: ItemService
   public static getInstance() {
@@ -11,17 +12,45 @@ class ItemService {
     return ItemService.instance
   }
 
+  private async getPublisher({ domain, name, favicon }: GetPublisherParams) {
+    const exists = await db.publisher.findUnique({
+      where: {
+        domain,
+      },
+    })
+    if (exists) {
+      return exists
+    }
+    const publisher = await db.publisher.create({
+      data: {
+        domain,
+        name,
+        favicon,
+      },
+    })
+    return publisher
+  }
+
   async createItem(
     userId: number,
     { title, body, link, tags }: CreateItemBodyType,
   ) {
     console.log('1212121212', userId, body)
+    const info = await extractPageInfo(link)
+    const publisher = await this.getPublisher({
+      domain: info.domain,
+      name: info.publisher,
+      favicon: info.favicon,
+    })
     const item = await db.item.create({
       data: {
         title,
         body,
-        link,
+        link: info.url,
         userId,
+        thumbnail: info.thumbnail,
+        author: info.author ?? undefined,
+        publisherId: publisher.id,
       },
       include: {
         user: true,
@@ -148,6 +177,12 @@ interface UpdateItemParams {
 interface DeleteItemParams {
   itemId: number
   userId: number | undefined
+}
+
+interface GetPublisherParams {
+  domain: string
+  name: string
+  favicon: string | null
 }
 
 export default ItemService

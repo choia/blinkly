@@ -22,6 +22,7 @@ const ItemSchema = Type.Object({
   thumbnail: Nullable(Type.String()),
   createdAt: Type.String(),
   updatedAt: Type.String(),
+  author: Type.String(),
   user: UserSchema,
 })
 

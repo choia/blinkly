@@ -7,6 +7,7 @@ type ErrorName =
   | 'RefreshTokenError'
   | 'NotFoundError'
   | 'ForbiddenError'
+  | 'InvalidUrlError'
 
 type ErrorInfo = {
   message: string
@@ -24,6 +25,7 @@ interface ErrorPayload {
   RefreshTokenError: undefined
   NotFoundError: undefined
   ForbiddenError: undefined
+  InvalidUrlError: undefined
 }
 
 const statusCodeMap: Record<ErrorName, ErrorInfo> = {
@@ -58,6 +60,10 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
   ForbiddenError: {
     message: 'Forbidden',
     statusCode: 403,
+  },
+  InvalidUrlError: {
+    message: 'Invalid URL',
+    statusCode: 422,
   },
 }
 

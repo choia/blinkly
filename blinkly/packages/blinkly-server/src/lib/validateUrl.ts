@@ -29,7 +29,10 @@ export async function ValidateUrl(url: string): Promise<ValidateUrlResult> {
 
   const withHttp = `http://${url}`
   const withHttps = `https://${url}`
-  const [http, https] = await Promise.allSettled([client.get(withHttp), client.get(withHttps)])
+  const [http, https] = await Promise.allSettled([
+    client.get(withHttp),
+    client.get(withHttps),
+  ])
 
   if (https.status === 'fulfilled') {
     return {
@@ -45,6 +48,6 @@ export async function ValidateUrl(url: string): Promise<ValidateUrlResult> {
   }
   return {
     isValid: false,
-    url: withHttp,
+    url,
   }
 }

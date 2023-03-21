@@ -10,11 +10,9 @@ import { useWriteContext } from '@/contexts/writeContext'
 const Write = () => {
   const router = useRouter()
   const { state, actions } = useWriteContext()
-  const [link, setLink] = useState(state.link)
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    actions.setLink(link)
     router.push('/write/intro')
   }
 
@@ -29,9 +27,10 @@ const Write = () => {
           label="URL"
           placeholder="https://example.com"
           name="link"
-          // value={link}
-          defaultValue={state.link}
-          onChange={(e) => setLink(e.target.value)}
+          value={state.form.link}
+          // defaultValue={state.form.link}input
+          onChange={(e) => actions.change('link', e.target.value)}
+          errorMessage={state.error?.statusCode === 422 ? 'Incorrect URL' : undefined}
         ></LabelInput>
       </WriteFormTemplate>
     </BasicTemplate>

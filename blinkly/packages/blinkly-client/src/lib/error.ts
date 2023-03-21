@@ -18,6 +18,7 @@ interface ErrorPayload {
   }
   BadRequestError: undefined
   RefreshTokenError: undefined
+  WrongCredentials: undefined
 }
 
 export interface AppError {

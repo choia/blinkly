@@ -11,31 +11,30 @@ import { applyAuth } from '@/lib/applyAuth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextPageContext } from 'next/types'
 import { useRouter } from 'next/router'
+import { extractError } from '@/lib/error'
 
 function Intro({ cookies }) {
   const router = useRouter()
 
   const {
-    state: { link },
+    state: { form },
     actions,
   } = useWriteContext()
-
-  const [form, setForm] = useState({
-    title: '',
-    body: '',
-  })
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const cookie = cookies['access_token']
 
-    const formData = new FormData(e.currentTarget)
-    const title = formData.get('title') as string
-    const body = formData.get('body') as string
+    if (form.title === '' || form.body === '') {
+      setErrorMessage('Please enter both title and content.')
+      return
+    }
+
     const data = {
-      title,
-      body,
-      link,
+      title: form.title,
+      body: form.body,
+      link: form.link,
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -59,17 +58,20 @@ function Intro({ cookies }) {
       const response = await axios(config)
       console.log('7777777', response)
       router.push('/')
-    } catch (e: any) {
-      console.log(e)
+    } catch (e) {
+      console.log('hello', e.response.data)
+      const errorData = e.response.data
+      if (errorData.statusCode === 422) {
+        actions.setError(errorData)
+        router.push('/write/')
+      }
     }
   }
+
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const key = e.target.name
+    const key = e.target.name as 'title' | 'link' | 'body'
     const { value } = e.target
-    setForm({
-      ...form,
-      [key]: value,
-    })
+    actions.change(key, value)
   }
 
   return (
@@ -92,6 +94,7 @@ function Intro({ cookies }) {
             value={form.body}
             onChange={onChange}
           ></StyledLabelTextArea>
+          {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
     </BasicTemplate>
@@ -124,6 +127,13 @@ const StyledLabelTextArea = styled(LabelTextArea)`
     resize: none;
     font-family: inherit;
   }
+`
+
+const Message = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  color: red;
+  text-align: center;
 `
 
 export default Intro

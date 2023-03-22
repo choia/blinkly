@@ -24,6 +24,12 @@ const ItemSchema = Type.Object({
   updatedAt: Type.String(),
   author: Type.String(),
   user: UserSchema,
+  publisher: Type.Object({
+    id: Type.Integer(),
+    name: Type.String(),
+    favicon: Type.String(),
+    domain: Nullable(Type.String()),
+  }),
 })
 
 ItemSchema.example = {

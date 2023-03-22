@@ -1,11 +1,11 @@
-import BasicTemplate from '@/components/templates/basicTemplate'
+import BasicLayout from '@/components/templates/basicLayout'
 import AuthForm from '@/components/layouts/auth/authForm'
 
 const Register = () => {
   return (
-    <BasicTemplate title="register" hasBackButton>
+    <BasicLayout title="register" hasBackButton>
       <AuthForm mode="register" />
-    </BasicTemplate>
+    </BasicLayout>
   )
 }
 

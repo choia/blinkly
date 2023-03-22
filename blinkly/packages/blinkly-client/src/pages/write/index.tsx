@@ -1,4 +1,4 @@
-import BasicTemplate from '@/components/templates/basicTemplate'
+import BasicLayout from '@/components/templates/basicLayout'
 import Button from '@/components/common/button'
 
 import { useRouter } from 'next/router'
@@ -17,7 +17,7 @@ const Write = () => {
   }
 
   return (
-    <BasicTemplate title="Enter a Link" hasBackButton>
+    <BasicLayout title="Enter a Link" hasBackButton>
       <WriteFormTemplate
         description="Enter a URL that you like to share!"
         buttonText="Next"
@@ -33,7 +33,7 @@ const Write = () => {
           errorMessage={state.error?.statusCode === 422 ? 'Incorrect URL' : undefined}
         ></LabelInput>
       </WriteFormTemplate>
-    </BasicTemplate>
+    </BasicLayout>
   )
 }
 

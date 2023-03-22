@@ -4,22 +4,25 @@ import Header from '../layouts/header/header'
 import Footer from '../layouts/footer/footer'
 
 interface Props {
-  children: React.ReactNode
+  children?: React.ReactNode
+  className?: string
 }
-const TabTemplate = ({ children }: Props) => {
+
+const TabLayout = ({ children, className }: Props) => {
   return (
     <FullHeightPage>
       <Header />
-      <Content>{children}</Content>
+      <Content className={className}>{children}</Content>
       <Footer />
     </FullHeightPage>
   )
 }
 
-export default TabTemplate
-
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: scroll;
 `
+
+export default TabLayout

@@ -4,7 +4,7 @@ import type {
   NextApiResponse,
   NextPageContext,
 } from 'next'
-import BasicTemplate from '@/components/templates/basicTemplate'
+import BasicLayout from '@/components/templates/basicLayout'
 import { checkIsLoggedIn } from '@/lib/protectRoute'
 import { useState } from 'react'
 import writeHandler from './api/write'

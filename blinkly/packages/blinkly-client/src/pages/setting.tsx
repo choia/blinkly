@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import TabTemplate from '@/components/templates/tabTemplate'
+import TabLayout from '@/components/templates/tabLayout'
 
 const Setting = () => {
   return (
-    <TabTemplate>
+    <TabLayout>
       <div>settings</div>
-    </TabTemplate>
+    </TabLayout>
   )
 }
 

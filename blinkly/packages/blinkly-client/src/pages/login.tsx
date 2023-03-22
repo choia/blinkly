@@ -1,12 +1,11 @@
-import BasicTemplate from '@/components/templates/basicTemplate'
+import BasicLayout from '@/components/templates/basicLayout'
 import AuthForm from '@/components/layouts/auth/authForm'
-import { NextApiRequest } from 'next/types'
 
 const Login = () => {
   return (
-    <BasicTemplate title="login" hasBackButton>
+    <BasicLayout title="login" hasBackButton>
       <AuthForm mode="login" />
-    </BasicTemplate>
+    </BasicLayout>
   )
 }
 

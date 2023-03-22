@@ -1,11 +1,11 @@
-import TabTemplate from '@/components/templates/tabTemplate'
+import TabLayout from '@/components/templates/tabLayout'
 import styled from 'styled-components'
 
 const Search = () => {
   return (
-    <TabTemplate>
+    <TabLayout>
       <div>search</div>
-    </TabTemplate>
+    </TabLayout>
   )
 }
 

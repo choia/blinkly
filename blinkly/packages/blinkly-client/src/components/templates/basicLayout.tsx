@@ -1,6 +1,5 @@
-import useGoBack from '@/hooks/useGoBack'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
+import useGoBack from '@/hooks/useGoBack'
 import FullHeightPage from '../common/fullHeightPage'
 import Header from '../layouts/header/header'
 import HeaderBackButton from '../layouts/header/headerBackButton'
@@ -11,7 +10,7 @@ interface Props {
   children: React.ReactNode
   onGoback?(): void
 }
-const BasicTemplate = ({ title, hasBackButton, children, onGoback }: Props) => {
+const BasicLayout = ({ title, hasBackButton, children, onGoback }: Props) => {
   const goBack = useGoBack()
 
   return (
@@ -24,10 +23,11 @@ const BasicTemplate = ({ title, hasBackButton, children, onGoback }: Props) => {
     </FullHeightPage>
   )
 }
-export default BasicTemplate
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
 `
+
+export default BasicLayout

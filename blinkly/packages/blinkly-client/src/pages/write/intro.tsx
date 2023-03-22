@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from 'axios'
-import BasicTemplate from '@/components/templates/basicTemplate'
+import axios from 'axios'
+import BasicLayout from '@/components/templates/basicLayout'
 import WriteFormTemplate from '@/components/layouts/write/writeFormTemplate'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import styled from 'styled-components'
@@ -12,8 +12,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { NextPageContext } from 'next/types'
 import { useRouter } from 'next/router'
 import { extractError } from '@/lib/error'
+import type { InferGetStaticPropsType } from 'next'
 
-function Intro({ cookies }) {
+function Intro({ cookies }: InferGetStaticPropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
   const {
@@ -58,7 +59,7 @@ function Intro({ cookies }) {
       const response = await axios(config)
       console.log('7777777', response)
       router.push('/')
-    } catch (e) {
+    } catch (e: any) {
       console.log('hello', e.response.data)
       const errorData = e.response.data
       if (errorData.statusCode === 422) {
@@ -75,7 +76,7 @@ function Intro({ cookies }) {
   }
 
   return (
-    <BasicTemplate title="Intro" hasBackButton>
+    <BasicLayout title="Intro" hasBackButton>
       <WriteFormTemplate
         description="Enter news you like to share"
         buttonText="Register"
@@ -97,13 +98,13 @@ function Intro({ cookies }) {
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
-    </BasicTemplate>
+    </BasicLayout>
   )
 }
 
 export async function getServerSideProps(context: NextPageContext) {
   const { req } = context
-  const cookies = req.cookies
+  const cookies = req?.cookies
 
   return {
     props: {

@@ -6,15 +6,18 @@ import Footer from '@/components/layouts/footer/footer'
 import { useWriteContext } from '@/contexts/writeContext'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { client } from '@/lib/client'
+import { GetItemResult } from './api/types'
 
-export default function Home() {
+export default function Home({ data }) {
+  console.log(data)
   // const { userData } = useUserContext()
   // console.log('@idnex', userData)
   const { state, actions } = useWriteContext()
   const router = useRouter()
 
   useEffect(() => {
-    if (router.pathname === '/' && state.link !== '') {
+    if (router.pathname === '/' && state.form.link !== '') {
       actions.reset()
     }
   }, [state, actions, router.pathname])
@@ -34,6 +37,18 @@ export default function Home() {
       </FullHeightPage>
     </>
   )
+}
+
+export async function getStaticProps() {
+  const url = 'http://localhost:8080/api/items'
+
+  const response = await client.get<GetItemResult>(url)
+
+  return {
+    props: {
+      data: response.data,
+    },
+  }
 }
 
 // export async function getServerSideProps(context) {

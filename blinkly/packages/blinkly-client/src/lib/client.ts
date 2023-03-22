@@ -8,7 +8,7 @@ client.defaults.withCredentials = true
 
 export function setClientCookie(cookie: string) {
   // _cookie = cookie
-  console.log('5555 at client.ts', cookie)
+  console.log('client.ts', cookie)
   client.defaults.headers.common['Cookie'] = cookie
 }
 

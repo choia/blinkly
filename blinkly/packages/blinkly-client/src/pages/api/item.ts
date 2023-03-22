@@ -1,6 +1,7 @@
+import { client } from '@/lib/client'
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Item } from './types'
+import { GetItemResult, Item } from './types'
 import { applyAuth } from '@/lib/applyAuth'
 import { extractError } from '@/lib/error'
 
@@ -30,5 +31,9 @@ export default async function itemHandler(req: NextApiRequest, res: NextApiRespo
       const error = extractError(e)
       res.status(error.statusCode).json(error)
     }
+  } else if (req.method === 'GET') {
+    const url = 'http://localhost:8080/api/items'
+    const response = await client.get<GetItemResult>(url)
+    res.status(200).json(response.data)
   }
 }

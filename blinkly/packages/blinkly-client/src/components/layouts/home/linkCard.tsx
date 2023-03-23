@@ -1,22 +1,26 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image'
 import { Globe, HeartOutline } from '@/components/vectors'
 import { colors } from '@/lib/colors'
 import { Item } from '@/pages/api/types'
 import styled from 'styled-components'
+import { useDateDistance } from '@/hooks/useDateDistance'
 
 interface Props {
   item: Item
 }
 
 function LinkCard({ item }: Props) {
-  const { id, title, body, link, thumbnail, author, publisher, user } = item
+  const { id, title, body, link, thumbnail, author, publisher, user, createdAt } = item
   console.log(publisher)
+
+  const dateDistance = useDateDistance(createdAt)
   return (
     <Block>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
       <Publisher>
         {publisher.favicon ? (
-          <Image src={publisher.favicon} alt="favicon" width={24} height={24} />
+          <img src={publisher.favicon} alt="favicon" width={24} height={24} />
         ) : (
           <Globe />
         )}
@@ -27,7 +31,7 @@ function LinkCard({ item }: Props) {
       <Footer>
         <StyleHeartOutline />
         <UserInfo>
-          by <b>{user.username}</b> · 1 Hour ago
+          by <b>{user.username}</b> · {dateDistance}
         </UserInfo>
       </Footer>
     </Block>

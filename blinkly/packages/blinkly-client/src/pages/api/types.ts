@@ -20,7 +20,7 @@ export interface Item {
 export interface Publisher {
   id: number
   name: string
-  favicon: string
+  favicon: string | null
   domain: string
 }
 

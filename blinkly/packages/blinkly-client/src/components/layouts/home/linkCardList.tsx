@@ -19,5 +19,6 @@ function LinkCardList({ items }: Props) {
 const List = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 48px;
 `
 export default LinkCardList

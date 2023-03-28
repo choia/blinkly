@@ -18,7 +18,6 @@ const ItemSchema = Type.Object({
   title: Type.String(),
   body: Type.String(),
   link: Type.String(),
-  // tags: Type.Array(Type.String()),
   thumbnail: Nullable(Type.String()),
   createdAt: Type.String(),
   updatedAt: Type.String(),
@@ -103,6 +102,18 @@ export const UpdateItemsSchema: FastifySchema = {
   },
 }
 
+const ItemLikeSchema = Type.Object({
+  id: Type.Integer(),
+  likes: Type.Integer(),
+})
+
+ItemLikeSchema.examples = {
+  id: 1,
+  likes: 10,
+}
+
+type ItemLikeType = Static<typeof ItemLikeSchema>
+
 export interface UpdateItemRoute {
   Params: ItemParamType
   Body: UpdateItemBodyType
@@ -116,5 +127,27 @@ export const DeleteItemSchema: FastifySchema = {
 }
 
 export interface DeleteItemRoute {
+  Params: ItemParamType
+}
+
+export const LikeItemSchema: FastifySchema = {
+  params: ItemParamSchema,
+  response: {
+    200: ItemLikeSchema,
+  },
+}
+
+export interface LikeItemRoute {
+  Params: ItemParamType
+}
+
+export const UnLikeItemSchema: FastifySchema = {
+  params: ItemParamSchema,
+  response: {
+    200: ItemLikeSchema,
+  },
+}
+
+export interface UnLikeItemRoute {
   Params: ItemParamType
 }

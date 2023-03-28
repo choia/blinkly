@@ -10,6 +10,10 @@ import {
   GetItemSchema,
   GetItemsRoute,
   GetItemsSchema,
+  LikeItemRoute,
+  LikeItemSchema,
+  UnLikeItemRoute,
+  UnLikeItemSchema,
   UpdateItemRoute,
   UpdateItemsSchema,
   WriteItemRoute,
@@ -59,7 +63,7 @@ const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
     { schema: UpdateItemsSchema },
     async (request) => {
       const { id: itemId } = request.params
-      const userId = request.user?.id
+      const userId = request.user!.id
       const { title, body } = request.body
 
       return itemService.updateItem({ itemId, userId, title, body })
@@ -71,10 +75,33 @@ const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
     { schema: DeleteItemSchema },
     async (request, response) => {
       const { id: itemId } = request.params
-      const userId = request.user?.id
+      const userId = request.user!.id
 
       await itemService.deleteItem({ userId, itemId })
       response.status(204)
+    },
+  )
+
+  fastify.post<LikeItemRoute>(
+    '/:id/likes',
+    { schema: LikeItemSchema },
+    async (request) => {
+      const { id: itemId } = request.params
+      const userId = request.user!.id
+
+      const likes = await itemService.likeItem({ userId, itemId })
+      return { id: itemId, likes }
+    },
+  )
+  fastify.delete<UnLikeItemRoute>(
+    '/:id/likes',
+    { schema: UnLikeItemSchema },
+    async (request) => {
+      const { id: itemId } = request.params
+      const userId = request.user!.id
+
+      const likes = await itemService.unlikeItem({ userId, itemId })
+      return { id: itemId, likes }
     },
   )
 })

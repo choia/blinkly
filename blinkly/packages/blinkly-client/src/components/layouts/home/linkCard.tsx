@@ -12,7 +12,7 @@ interface Props {
 
 function LinkCard({ item }: Props) {
   const { id, title, body, link, thumbnail, author, publisher, user, createdAt } = item
-  console.log(publisher)
+  // console.log(publisher)
 
   const dateDistance = useDateDistance(createdAt)
   return (

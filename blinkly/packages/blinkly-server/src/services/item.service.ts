@@ -35,7 +35,7 @@ class ItemService {
     userId: number,
     { title, body, link, tags }: CreateItemBodyType,
   ) {
-    console.log('1212121212', userId, body)
+    // console.log('1212121212', userId, body)
     const info = await extractPageInfo(link)
     const publisher = await this.getPublisher({
       domain: info.domain,

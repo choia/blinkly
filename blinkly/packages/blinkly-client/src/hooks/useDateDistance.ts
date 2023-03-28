@@ -11,7 +11,7 @@ export function useDateDistance(date: string | Date) {
     return () => clearInterval(interval)
   })
 
-  console.log(value)
+  // console.log(value)
 
   const dateDistance = useMemo(() => {
     const d = date instanceof Date ? date : new Date(date)

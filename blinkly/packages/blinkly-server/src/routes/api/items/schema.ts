@@ -29,6 +29,10 @@ const ItemSchema = Type.Object({
     favicon: Type.String(),
     domain: Nullable(Type.String()),
   }),
+  itemStats: Type.Object({
+    id: Type.Integer(),
+    likes: Type.Integer(),
+  }),
 })
 
 ItemSchema.example = {
@@ -45,46 +49,11 @@ ItemSchema.example = {
   },
 }
 
-export const WriteItemSchema: FastifySchema = {
-  tags: ['item'],
-  body: CreateItemSchema,
-  response: {
-    200: ItemSchema,
-  },
-}
-
-export interface WriteItemRoute {
-  Body: CreateItemBodyType
-}
-
 const ItemParamSchema = Type.Object({
   id: Type.Integer(),
 })
 
 type ItemParamType = Static<typeof ItemParamSchema>
-
-export const GetItemSchema: FastifySchema = {
-  tags: ['item'],
-  params: ItemParamSchema,
-  response: {
-    200: ItemSchema,
-  },
-}
-
-export interface GetItemRoute {
-  Params: ItemParamType
-}
-
-export const GetItemsSchema: FastifySchema = {
-  response: {
-    200: PaginationSchema(ItemSchema),
-  },
-}
-export interface GetItemsRoute {
-  Querystring: {
-    cursor?: string
-  }
-}
 
 const UpdateItemBodySchema = Type.Object({
   title: Type.String(),
@@ -94,29 +63,45 @@ const UpdateItemBodySchema = Type.Object({
 
 type UpdateItemBodyType = Static<typeof UpdateItemBodySchema>
 
+const ItemLikeSchema = Type.Object({
+  id: Type.Integer(),
+  likes: Type.Integer(),
+})
+
+ItemLikeSchema.example = {
+  id: 1,
+  likes: 10,
+}
+
+/* fastify schema */
+export const WriteItemSchema: FastifySchema = {
+  tags: ['item'],
+  body: CreateItemSchema,
+  response: {
+    200: ItemSchema,
+  },
+}
+
+export const GetItemSchema: FastifySchema = {
+  tags: ['item'],
+  params: ItemParamSchema,
+  response: {
+    200: ItemSchema,
+  },
+}
+
+export const GetItemsSchema: FastifySchema = {
+  response: {
+    200: PaginationSchema(ItemSchema),
+  },
+}
+
 export const UpdateItemsSchema: FastifySchema = {
   params: ItemParamSchema,
   body: UpdateItemBodySchema,
   response: {
     200: ItemSchema,
   },
-}
-
-const ItemLikeSchema = Type.Object({
-  id: Type.Integer(),
-  likes: Type.Integer(),
-})
-
-ItemLikeSchema.examples = {
-  id: 1,
-  likes: 10,
-}
-
-type ItemLikeType = Static<typeof ItemLikeSchema>
-
-export interface UpdateItemRoute {
-  Params: ItemParamType
-  Body: UpdateItemBodyType
 }
 
 export const DeleteItemSchema: FastifySchema = {
@@ -126,10 +111,6 @@ export const DeleteItemSchema: FastifySchema = {
   },
 }
 
-export interface DeleteItemRoute {
-  Params: ItemParamType
-}
-
 export const LikeItemSchema: FastifySchema = {
   params: ItemParamSchema,
   response: {
@@ -137,15 +118,39 @@ export const LikeItemSchema: FastifySchema = {
   },
 }
 
-export interface LikeItemRoute {
-  Params: ItemParamType
-}
-
 export const UnLikeItemSchema: FastifySchema = {
   params: ItemParamSchema,
   response: {
     200: ItemLikeSchema,
   },
+}
+
+/* route interface */
+export interface WriteItemRoute {
+  Body: CreateItemBodyType
+}
+
+export interface GetItemRoute {
+  Params: ItemParamType
+}
+
+export interface GetItemsRoute {
+  Querystring: {
+    cursor?: string
+  }
+}
+
+export interface UpdateItemRoute {
+  Params: ItemParamType
+  Body: UpdateItemBodyType
+}
+
+export interface DeleteItemRoute {
+  Params: ItemParamType
+}
+
+export interface LikeItemRoute {
+  Params: ItemParamType
 }
 
 export interface UnLikeItemRoute {

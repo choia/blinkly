@@ -74,6 +74,7 @@ class ItemService {
       include: {
         user: true,
         publisher: true,
+        itemStats: true,
       },
     })
     if (!item) {
@@ -103,6 +104,7 @@ class ItemService {
           include: {
             user: true,
             publisher: true,
+            itemStats: true,
           },
           take: limit,
         }),
@@ -149,6 +151,8 @@ class ItemService {
       },
       include: {
         user: true,
+        publisher: true,
+        itemStats: true,
       },
     })
     return updatedItem
@@ -174,6 +178,16 @@ class ItemService {
     })
     return count
   }
+  async updateItemsLike({ itemId, likes }: UpdateItemLikesParams) {
+    return db.itemStats.update({
+      data: {
+        likes,
+      },
+      where: {
+        itemId,
+      },
+    })
+  }
 
   async likeItem({ userId, itemId }: ItemActionParams) {
     const alreadyLiked = await db.itemLike.findUnique({
@@ -194,7 +208,9 @@ class ItemService {
         })
       } catch (e) {}
     }
-    return this.countLikes(itemId)
+    const likes = await this.countLikes(itemId)
+    await this.updateItemsLike({ itemId, likes })
+    return likes
   }
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
@@ -206,7 +222,9 @@ class ItemService {
         },
       },
     })
-    return this.countLikes(itemId)
+    const likes = await this.countLikes(itemId)
+    await this.updateItemsLike({ itemId, likes })
+    return likes
   }
 }
 
@@ -229,6 +247,11 @@ interface UpdateItemParams {
 interface ItemActionParams {
   itemId: number
   userId: number
+}
+
+interface UpdateItemLikesParams {
+  itemId: number
+  likes: number
 }
 
 interface GetPublisherParams {

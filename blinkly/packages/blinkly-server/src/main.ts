@@ -7,10 +7,21 @@ import AppError from './lib/AppError.js'
 import { authPlugin } from './plugins/authPlugin.js'
 import routes from './routes/index.js'
 import { swaggerConfig, swaggerConfigUI } from './swagger/swagger.js'
+import cors from '@fastify/cors'
+
+console.log(process.env.NODE_ENV)
 
 const server = Fastify({
   logger: true,
 })
+
+if (process.env.NODE_ENV === 'development') {
+  server.register(cors, {
+    origin: '/localhost/',
+    allowedHeaders: ['Cookie'],
+    credentials: true,
+  })
+}
 
 await server.register(fastifySwagger, swaggerConfig)
 await server.register(fastifySwaggerUi, swaggerConfigUI)

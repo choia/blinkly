@@ -209,8 +209,8 @@ class ItemService {
       } catch (e) {}
     }
     const likes = await this.countLikes(itemId)
-    await this.updateItemsLike({ itemId, likes })
-    return likes
+    const itemStats = await this.updateItemsLike({ itemId, likes })
+    return itemStats
   }
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
@@ -223,8 +223,8 @@ class ItemService {
       },
     })
     const likes = await this.countLikes(itemId)
-    await this.updateItemsLike({ itemId, likes })
-    return likes
+    const itemStats = await this.updateItemsLike({ itemId, likes })
+    return itemStats
   }
 }
 

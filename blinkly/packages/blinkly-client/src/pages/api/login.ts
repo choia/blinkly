@@ -1,3 +1,4 @@
+import { client } from '@/lib/client'
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { AuthParams, AuthResult } from './types'
@@ -14,7 +15,7 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
 
 const loginPostApi = async (params: AuthParams) => {
   const url = 'http://localhost:8080/api/auth/login'
-  const response = await axios.post<AuthResult>(url, params)
+  const response = await client.post<AuthResult>(url, params)
   const result = response.data
 
   const cookieHeader = response.headers['set-cookie']

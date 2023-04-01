@@ -5,6 +5,9 @@ import { colors } from '@/lib/colors'
 import { Item } from '@/pages/api/types'
 import styled from 'styled-components'
 import { useDateDistance } from '@/hooks/useDateDistance'
+import { likeItem } from '@/pages/api/item'
+import axios from 'axios'
+import { client } from '@/lib/client'
 
 interface Props {
   item: Item
@@ -13,6 +16,14 @@ interface Props {
 function LinkCard({ item }: Props) {
   const { id, title, body, link, thumbnail, author, publisher, user, createdAt } = item
   // console.log(publisher)
+  // console.log(id)
+  const handleLikeItem = async () => {
+    const url = '/api/itemLike'
+
+    try {
+      const response = await axios.post(url, { param: id })
+    } catch (e) {}
+  }
 
   const dateDistance = useDateDistance(createdAt)
   return (
@@ -29,7 +40,11 @@ function LinkCard({ item }: Props) {
       <h3>{title}</h3>
       <p>{body}</p>
       <Footer>
-        <StyleHeartOutline />
+        <StyleHeartOutline
+          onClick={() => {
+            handleLikeItem()
+          }}
+        />
         <UserInfo>
           by <b>{user.username}</b> · {dateDistance}
         </UserInfo>

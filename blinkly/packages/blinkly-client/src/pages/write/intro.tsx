@@ -60,7 +60,7 @@ function Intro({ cookies }: InferGetStaticPropsType<typeof getServerSideProps>) 
       console.log('7777777', response)
       router.push('/')
     } catch (e: any) {
-      console.log('hello', e.response.data)
+      // console.log('hello', e.response.data)
       const errorData = e.response.data
       if (errorData.statusCode === 422) {
         actions.setError(errorData)

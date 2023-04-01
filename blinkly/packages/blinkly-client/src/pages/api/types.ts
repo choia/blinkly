@@ -15,6 +15,7 @@ export interface Item {
   author: string
   user: User
   publisher: Publisher
+  itemStats: ItemStats
 }
 
 export interface Publisher {
@@ -22,6 +23,12 @@ export interface Publisher {
   name: string
   favicon: string | null
   domain: string
+}
+
+export interface ItemStats {
+  id: number
+  like: number
+  isLiked: boolean
 }
 
 export interface User {
@@ -53,4 +60,22 @@ export interface CreateItemParams {
   content: string
   link: string
   tag?: string[]
+}
+
+export interface LikeItemResult {
+  id: number
+  itemStats: ItemStats
+}
+
+export type UnLikeItemResult = LikeItemResult
+
+export interface LikeActionParams {
+  type: 'like' | 'unlike'
+  itemId: number
+}
+
+export interface LikeActionResult {
+  type: 'like' | 'unlike'
+  itemId: number
+  likes: number
 }

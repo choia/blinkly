@@ -1,3 +1,4 @@
+import { ItemStatProvider } from '@/contexts/itemStatContext'
 import { UserContext, useUser } from '@/contexts/userContext'
 import { WriteProvider } from '@/contexts/writeContext'
 import '@/styles/globals.css'
@@ -12,7 +13,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <GlobalStyles />
       <UserContext.Provider value={data}>
         <WriteProvider>
-          <Component {...pageProps} />
+          <ItemStatProvider>
+            <Component {...pageProps} />
+          </ItemStatProvider>
         </WriteProvider>
       </UserContext.Provider>
     </>

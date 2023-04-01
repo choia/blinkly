@@ -9,25 +9,13 @@ import LinkCardList from '@/components/layouts/home/linkCardList'
 import TabLayout from '@/components/templates/tabLayout'
 import { GetItemResult } from './api/types'
 import type { InferGetStaticPropsType } from 'next'
-import useSWRInfinite from 'swr/infinite'
-import useSWR from 'swr'
 import axios from 'axios'
-import { getItems } from './api/item'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
 interface QueryProps {
   query: {
     cursor: string
   }
-}
-
-const initialState: GetItemResult = {
-  list: [],
-  totalCount: 0,
-  pageInfo: {
-    endCursor: null,
-    hasNextPage: false,
-  },
 }
 
 export default function Home({ data }: InferGetStaticPropsType<typeof getServerSideProps>) {
@@ -57,7 +45,6 @@ export default function Home({ data }: InferGetStaticPropsType<typeof getServerS
     if (!itemData) return
     if (pages.includes(itemData)) return
     setPages(pages.concat(itemData))
-    console.log('222', itemData)
   }, [pages, data, itemData])
 
   useInfiniteScroll(ref, fetchNext)

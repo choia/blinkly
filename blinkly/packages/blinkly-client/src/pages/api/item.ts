@@ -1,7 +1,7 @@
 import { client } from '@/lib/client'
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { GetItemResult, Item } from './types'
+import { GetItemResult, Item, LikeItemResult } from './types'
 import { applyAuth } from '@/lib/applyAuth'
 import { extractError } from '@/lib/error'
 import qs from 'qs'
@@ -57,5 +57,15 @@ export async function getItems(cursor: number | undefined) {
     ),
   )
 
+  return response.data
+}
+
+export async function likeItem(itemId: string) {
+  const response = await client.post<LikeItemResult>(`/api/items/${itemId}/likes`)
+  return response.data
+}
+
+export async function unlikeItem(itemId: number) {
+  const response = await client.delete<LikeItemResult>(`/api/items/${itemId}/likes`)
   return response.data
 }

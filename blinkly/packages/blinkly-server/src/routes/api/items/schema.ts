@@ -16,11 +16,13 @@ export type CreateItemBodyType = Static<typeof CreateItemSchema>
 const ItemStatsSchema = Type.Object({
   id: Type.String(),
   likes: Type.String(),
+  isLiked: Type.Boolean(),
 })
 
 ItemStatsSchema.example = {
   id: 1,
   likes: 10,
+  isLiked: true,
 }
 
 const ItemSchema = Type.Object({
@@ -57,6 +59,7 @@ ItemSchema.example = {
   itemStats: {
     id: 1,
     likes: 10,
+    isLiked: true,
   },
 }
 

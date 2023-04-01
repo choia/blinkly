@@ -3,6 +3,7 @@ import { CreateItemBodyType } from './../routes/api/items/schema.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
 import AppError from '../lib/AppError.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
+import { Item, ItemLike, ItemStats } from '@prisma/client'
 class ItemService {
   private static instance: ItemService
   public static getInstance() {
@@ -63,10 +64,16 @@ class ItemService {
         itemId: item.id,
       },
     })
-    return { ...item, itemStats }
+    const itemWithItemStats = { ...item, itemStats }
+
+    const itemLikedList = userId
+      ? await this.getItemLikedList({ userId, itemIds: [item.id] })
+      : null
+
+    return this.mergeItemLiked(itemWithItemStats, itemLikedList?.[item.id])
   }
 
-  async getItem(id: number) {
+  async getItem(id: number, userId: number | null = null) {
     const item = await db.item.findUnique({
       where: {
         id,
@@ -80,11 +87,18 @@ class ItemService {
     if (!item) {
       throw new AppError('NotFoundError')
     }
-    return item
+    const itemLikedList = userId
+      ? await this.getItemLikedList({ userId, itemIds: [id] })
+      : null
+
+    return this.mergeItemLiked(item, itemLikedList?.[id])
   }
 
   async getAllItems(
-    params: GetAllItemsParams & PaginationOptionType = { mode: 'recent' },
+    params: GetAllItemsParams & PaginationOptionType & { userId?: number } = {
+      mode: 'recent',
+    },
+    userId?: number,
   ) {
     const limit = params.limit ?? 20
     if (params.mode === 'recent') {
@@ -110,6 +124,16 @@ class ItemService {
         }),
       ])
 
+      const itemLikeList = params.userId
+        ? await this.getItemLikedList({
+            itemIds: items.map((item) => item.id),
+            userId: params.userId,
+          })
+        : null
+      const listWithLiked = items.map((item) => {
+        this.mergeItemLiked(item, itemLikeList?.[item.id])
+      })
+
       const endCursor = items.at(-1)?.id ?? null
       const hasNextPage = endCursor
         ? (await db.item.count({
@@ -125,7 +149,7 @@ class ItemService {
         : false
 
       return createPagination({
-        list: items,
+        list: listWithLiked,
         totalCount: totalCount,
         pageInfo: {
           endCursor: endCursor,
@@ -155,7 +179,11 @@ class ItemService {
         itemStats: true,
       },
     })
-    return updatedItem
+    const itemLikedList = userId
+      ? await this.getItemLikedList({ userId, itemIds: [item.id] })
+      : null
+
+    return this.mergeItemLiked(updatedItem, itemLikedList?.[item.id])
   }
 
   async deleteItem({ userId, itemId }: ItemActionParams) {
@@ -210,7 +238,7 @@ class ItemService {
     }
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemsLike({ itemId, likes })
-    return itemStats
+    return { ...itemStats, isLiked: true }
   }
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
@@ -224,7 +252,33 @@ class ItemService {
     })
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemsLike({ itemId, likes })
-    return itemStats
+    return { ...itemStats, isLiked: false }
+  }
+
+  private async getItemLikedList(params: GetItemLikedParams) {
+    const { userId, itemIds } = params
+    const list = await db.itemLike.findMany({
+      where: {
+        userId,
+        itemId: {
+          in: itemIds,
+        },
+      },
+    })
+    return list.reduce((acc, current) => {
+      acc[current.itemId] = current
+      return acc
+    }, {} as Record<number, ItemLike>)
+  }
+
+  private mergeItemLiked<T extends Item & { itemStats: ItemStats | null }>(
+    item: T,
+    itemLike?: ItemLike,
+  ) {
+    return {
+      ...item,
+      itemStats: { ...item.itemStats, isLiked: !!itemLike ?? false },
+    }
   }
 }
 
@@ -258,6 +312,11 @@ interface GetPublisherParams {
   domain: string
   name: string
   favicon: string | null
+}
+
+interface GetItemLikedParams {
+  userId: number
+  itemIds: number[]
 }
 
 export default ItemService

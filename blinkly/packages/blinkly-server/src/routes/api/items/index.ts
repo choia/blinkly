@@ -30,7 +30,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
     async (request) => {
       const { id } = request.params
       const item = await itemService.getItem(id, request.user?.id)
-      return item
+      return item as any
     },
   )
 
@@ -39,11 +39,11 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
     { schema: GetItemsSchema },
     async (request) => {
       const { cursor } = request.query
-      return await itemService.getAllItems({
+      return (await itemService.getAllItems({
         mode: 'recent',
         cursor: cursor ? parseInt(cursor, 10) : null,
         userId: request.user?.id,
-      })
+      })) as any
     },
   )
 }

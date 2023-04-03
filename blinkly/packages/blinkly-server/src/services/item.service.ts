@@ -36,7 +36,6 @@ class ItemService {
     userId: number,
     { title, body, link, tags }: CreateItemBodyType,
   ) {
-    // console.log('1212121212', userId, body)
     const info = await extractPageInfo(link)
     const publisher = await this.getPublisher({
       domain: info.domain,
@@ -98,7 +97,6 @@ class ItemService {
     params: GetAllItemsParams & PaginationOptionType & { userId?: number } = {
       mode: 'recent',
     },
-    userId?: number,
   ) {
     const limit = params.limit ?? 20
     if (params.mode === 'recent') {
@@ -130,9 +128,9 @@ class ItemService {
             userId: params.userId,
           })
         : null
-      const listWithLiked = items.map((item) => {
-        this.mergeItemLiked(item, itemLikeList?.[item.id])
-      })
+      const listWithLiked = items.map((item) =>
+        this.mergeItemLiked(item, itemLikeList?.[item.id]),
+      )
 
       const endCursor = items.at(-1)?.id ?? null
       const hasNextPage = endCursor
@@ -274,7 +272,7 @@ class ItemService {
   private mergeItemLiked<T extends Item>(item: T, itemLike?: ItemLike) {
     return {
       ...item,
-      itemLike: !!itemLike,
+      isLiked: !!itemLike,
     }
   }
 }

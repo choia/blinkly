@@ -28,7 +28,7 @@ export interface Publisher {
 
 export interface ItemStats {
   id: number
-  like: number
+  likes: number
 }
 
 export interface User {

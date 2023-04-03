@@ -1,52 +1,60 @@
 import { ItemStats } from '@/pages/api/types'
 import { createContext, useContext, useMemo, useState } from 'react'
 
-interface ItemStatContextState {
-  [key: number]: ItemStats
+interface OverridableItem {
+  isLiked: boolean
+  itemStats: ItemStats
+}
+interface ItemOverrideContextState {
+  [key: number]: OverridableItem
 }
 
-interface ItemStatContextActions {
-  set(itemId: number, itemStats: ItemStats): void
+interface ItemOverrideContextActions {
+  set(itemId: number, overridableItem: OverridableItem): void
 }
 
-interface ItemStatContextType {
-  state: ItemStatContextState
-  actions: ItemStatContextActions
+interface ItemOverrideContextType {
+  state: ItemOverrideContextState
+  actions: ItemOverrideContextActions
 }
 
 interface Props {
   children: React.ReactNode
 }
 
-const ItemStatContext = createContext<ItemStatContextType | null>(null)
+const ItemOverrideContext = createContext<ItemOverrideContextType | null>(null)
 
-export function ItemStatProvider({ children }: Props) {
-  const [state, setState] = useState<ItemStatContextState>({})
+export function ItemOverrideProvider({ children }: Props) {
+  const [state, setState] = useState<ItemOverrideContextState>({})
 
-  const actions: ItemStatContextActions = useMemo(
+  const actions: ItemOverrideContextActions = useMemo(
     () => ({
-      set(itemId, itemStats) {
+      set(itemId, overridableItem) {
         setState((prev) => ({
           ...prev,
-          [itemId]: itemStats,
+          [itemId]: overridableItem,
         }))
       },
     }),
     [],
   )
 
-  return <ItemStatContext.Provider value={{ state, actions }}>{children}</ItemStatContext.Provider>
+  return (
+    <ItemOverrideContext.Provider value={{ state, actions }}>
+      {children}
+    </ItemOverrideContext.Provider>
+  )
 }
 
-export function useItemStatContext() {
-  const context = useContext(ItemStatContext)
+export function useItemOverride() {
+  const context = useContext(ItemOverrideContext)
   if (context === null) {
-    throw new Error('itemStatContext.Provider not provided')
+    throw new Error('itemOverrideContext.Provider not provided')
   }
   return context
 }
 
-export function useItemStatById(itemId: number): ItemStats | undefined {
-  const { state } = useItemStatContext()
+export function useItemOverrideById(itemId: number): OverridableItem | undefined {
+  const { state } = useItemOverride()
   return state[itemId]
 }

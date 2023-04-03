@@ -14,11 +14,10 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
 
   if (req.method === 'POST') {
     const id = req.body['param']
-    console.log('1111111', id)
 
     try {
       const response = await likeItem(id)
-      console.log('2222222', response)
+
       res.status(200).json({ hello: 'hello' })
     } catch (e) {
       const error = extractError(e)
@@ -28,7 +27,7 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
   }
 }
 
-export async function likeItem(itemId: string) {
+export async function likeItem(itemId: string | number) {
   // const data = {
   //   method: 'post',
   //   headers: {
@@ -38,7 +37,9 @@ export async function likeItem(itemId: string) {
   // }
 
   // const cookie = client.defaults.headers.common['Cookie']
-  // console.log('000000', cookie)
+
+  const parsedItemId = typeof itemId === 'string' ? itemId : itemId.toString()
+
   const config = {
     method: 'Post',
     headers: {
@@ -47,7 +48,7 @@ export async function likeItem(itemId: string) {
     },
   }
   const response = await client.post<LikeItemResult>(
-    `http://localhost:8080/api/items/${itemId}/likes`,
+    `http://localhost:8080/api/items/${parsedItemId}/likes`,
     config,
   )
   return response.data

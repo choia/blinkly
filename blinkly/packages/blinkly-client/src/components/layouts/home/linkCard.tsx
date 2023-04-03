@@ -1,12 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import Image from 'next/image'
+import axios from 'axios'
 import { Globe, HeartOutline } from '@/components/vectors'
 import { colors } from '@/lib/colors'
 import { Item } from '@/pages/api/types'
 import styled from 'styled-components'
 import { useDateDistance } from '@/hooks/useDateDistance'
-import { likeItem } from '@/pages/api/item'
-import axios from 'axios'
 import { client } from '@/lib/client'
 
 interface Props {
@@ -15,13 +13,10 @@ interface Props {
 
 function LinkCard({ item }: Props) {
   const { id, title, body, link, thumbnail, author, publisher, user, createdAt } = item
-  // console.log(publisher)
-  // console.log(id)
-  const handleLikeItem = async () => {
-    const url = '/api/itemLike'
 
+  const handleLikeItem = async () => {
     try {
-      const response = await axios.post(url, { param: id })
+      const response = await axios.post('/api/itemLike', { param: id })
     } catch (e) {}
   }
 

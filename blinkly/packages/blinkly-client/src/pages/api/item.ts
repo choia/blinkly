@@ -60,12 +60,12 @@ export async function getItems(cursor: number | undefined) {
   return response.data
 }
 
-export async function likeItem(itemId: string) {
-  const response = await client.post<LikeItemResult>(`/api/items/${itemId}/likes`)
-  return response.data
-}
+// export async function likeItem(itemId: string) {
+//   const response = await client.post<LikeItemResult>(`/api/items/${itemId}/likes`)
+//   return response.data
+// }
 
-export async function unlikeItem(itemId: number) {
-  const response = await client.delete<LikeItemResult>(`/api/items/${itemId}/likes`)
-  return response.data
-}
+// export async function unlikeItem(itemId: number) {
+//   const response = await client.delete<LikeItemResult>(`/api/items/${itemId}/likes`)
+//   return response.data
+// }

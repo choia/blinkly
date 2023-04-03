@@ -16,13 +16,11 @@ export type CreateItemBodyType = Static<typeof CreateItemSchema>
 const ItemStatsSchema = Type.Object({
   id: Type.String(),
   likes: Type.String(),
-  isLiked: Type.Boolean(),
 })
 
 ItemStatsSchema.example = {
   id: 1,
   likes: 10,
-  isLiked: true,
 }
 
 const ItemSchema = Type.Object({
@@ -42,6 +40,7 @@ const ItemSchema = Type.Object({
     domain: Nullable(Type.String()),
   }),
   itemStats: ItemStatsSchema,
+  isLiked: Type.Boolean(),
 })
 
 ItemSchema.example = {
@@ -59,8 +58,8 @@ ItemSchema.example = {
   itemStats: {
     id: 1,
     likes: 10,
-    isLiked: true,
   },
+  isLiked: true,
 }
 
 const ItemParamSchema = Type.Object({
@@ -80,6 +79,7 @@ type UpdateItemBodyType = Static<typeof UpdateItemBodySchema>
 const ItemLikeSchema = Type.Object({
   id: Type.Integer(),
   itemStats: ItemStatsSchema,
+  isLiked: Type.Boolean(),
 })
 
 ItemLikeSchema.example = {
@@ -88,6 +88,7 @@ ItemLikeSchema.example = {
     id: 1,
     likes: 1,
   },
+  isLiked: true,
 }
 
 /* fastify schema */

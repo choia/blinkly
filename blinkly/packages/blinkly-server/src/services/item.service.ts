@@ -238,7 +238,7 @@ class ItemService {
     }
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemsLike({ itemId, likes })
-    return { ...itemStats, isLiked: true }
+    return itemStats
   }
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
@@ -252,7 +252,7 @@ class ItemService {
     })
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemsLike({ itemId, likes })
-    return { ...itemStats, isLiked: false }
+    return itemStats
   }
 
   private async getItemLikedList(params: GetItemLikedParams) {
@@ -271,13 +271,10 @@ class ItemService {
     }, {} as Record<number, ItemLike>)
   }
 
-  private mergeItemLiked<T extends Item & { itemStats: ItemStats | null }>(
-    item: T,
-    itemLike?: ItemLike,
-  ) {
+  private mergeItemLiked<T extends Item>(item: T, itemLike?: ItemLike) {
     return {
       ...item,
-      itemStats: { ...item.itemStats, isLiked: !!itemLike ?? false },
+      itemLike: !!itemLike,
     }
   }
 }

@@ -11,8 +11,6 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
   // if (!applied) {
   //   throw new Error('Not logged in')
   // }
-  const cookie = client.defaults.headers.common['Cookie']
-  console.log('000000', cookie)
 
   if (req.method === 'POST') {
     const id = req.body['param']

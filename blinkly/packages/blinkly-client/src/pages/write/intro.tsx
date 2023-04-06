@@ -57,7 +57,7 @@ function Intro({ cookies }: InferGetStaticPropsType<typeof getServerSideProps>) 
 
     try {
       const response = await axios(config)
-
+      console.log('7777777', response)
       router.push('/')
     } catch (e: any) {
       // console.log('hello', e.response.data)

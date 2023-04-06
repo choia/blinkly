@@ -1,27 +1,44 @@
-// type Method = 'POST' | 'GET'
+type Method = 'post' | 'get' | 'delete'
 
-interface ApiConfigType {
-  method: string
-  url?: string
-  headers: Record<string, string>
-  data?: Record<any, string>
-}
-
-const postConfigDefault: ApiConfigType = {
-  method: 'Post',
-  headers: { 'Content-Type': 'application/json' },
-}
-
-export function PostApiConfig(url: string, cookie: string, data?: any) {
-  return {
-    ...postConfigDefault,
-    url: url,
-    data: data,
-    headers: { Authorization: `Bearer ${cookie}` },
+export function createServerApiConfig(method: Method, cookie: any, controller?: AbortController) {
+  const config = {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: cookie,
+    },
+    signal: controller?.signal,
   }
+  return config
 }
 
-/*
-  Authorization: `Bearer ${req.cookies['access_token']}`,
-  withCredentials: withCredentials,
-*/
+export function createClientApiConfig(url: string, method: Method, cookie: any, data: any) {
+  const config = {
+    url: url,
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: cookie,
+    },
+    data: data,
+  }
+  return config
+}
+
+const initialData = {
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: '',
+  },
+}
+
+export function createItemLikeApiData<T extends number>(id: T, cookie: any) {
+  const apiData = {
+    ...initialData,
+    id,
+    headers: {
+      Authorization: `Bearer ${cookie}`,
+    },
+  }
+  return apiData
+}

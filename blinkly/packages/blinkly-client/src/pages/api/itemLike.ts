@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { GetItemResult, Item, LikeItemResult } from './types'
 import { applyAuth } from '@/lib/applyAuth'
 import { extractError } from '@/lib/error'
-import qs from 'qs'
+import { createServerApiConfig } from '@/lib/apiConfig'
 
 export default async function itemLikeHandler(req: NextApiRequest, res: NextApiResponse) {
   // const applied = applyAuth(req)
@@ -37,7 +37,7 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
 }
 
 export async function likeItem(itemId: number, cookie: any) {
-  const config = createApiConfig('post', cookie)
+  const config = createServerApiConfig('post', cookie)
 
   const response = await client.post<LikeItemResult>(
     `http://localhost:8080/api/items/${itemId}/likes`,
@@ -48,22 +48,11 @@ export async function likeItem(itemId: number, cookie: any) {
 }
 
 export async function unlikeItem(itemId: number, cookie: any) {
-  const config = createApiConfig('delete', cookie)
+  const config = createServerApiConfig('delete', cookie)
 
   const response = await client.delete<LikeItemResult>(
     `http://localhost:8080/api/items/${itemId}/likes`,
     config,
   )
   return response.data
-}
-
-export function createApiConfig(method: 'post' | 'get' | 'delete', cookie: any) {
-  const config = {
-    method: method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: cookie,
-    },
-  }
-  return config
 }

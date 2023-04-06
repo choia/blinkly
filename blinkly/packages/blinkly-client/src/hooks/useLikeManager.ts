@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useCallback } from 'react'
 import { useItemOverride } from '@/contexts/itemOverrideContext'
 import { ItemStats, LikeItemResult } from '@/pages/api/types'
+import { createClientApiConfig, createItemLikeApiData } from '@/lib/apiConfig'
 
 export function useLikeManager() {
   const { actions } = useItemOverride()
@@ -14,23 +15,9 @@ export function useLikeManager() {
         })
 
         const cookie = cookies['access_token']
+        const data = createItemLikeApiData(id, cookie)
+        const config = createClientApiConfig('/api/itemLike', 'post', cookie, data)
 
-        const data = {
-          id,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${cookie}`,
-          },
-        }
-        const config = {
-          url: '/api/itemLike',
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: cookie,
-          },
-          data,
-        }
         const resultData = await axios<LikeItemResult>(config)
 
         const result = resultData.data
@@ -53,22 +40,9 @@ export function useLikeManager() {
         })
 
         const cookie = cookies['access_token']
-        const data = {
-          id,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${cookie}`,
-          },
-        }
-        const config = {
-          url: '/api/itemLike',
-          method: 'delete',
-          headers: {
-            Authorization: cookie,
-            'Content-Type': 'application/json',
-          },
-          data,
-        }
+        const data = createItemLikeApiData(id, cookie)
+        const config = createClientApiConfig('/api/itemLike', 'delete', cookie, data)
+
         const resultData = await axios<LikeItemResult>(config)
 
         const result = resultData.data

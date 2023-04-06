@@ -12,49 +12,58 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
   //   throw new Error('Not logged in')
   // }
 
+  const id = req.body['id']
+  const cookie = req.body.headers['Authorization']
+
   if (req.method === 'POST') {
-    const id = req.body['param']
-
     try {
-      const response = await likeItem(id)
+      const response = await likeItem(id, cookie)
 
-      res.status(200).json({ hello: 'hello' })
+      res.status(200).json(response)
     } catch (e) {
       const error = extractError(e)
       res.status(error.statusCode).json(error)
     }
-  } else if (req.method === 'GET') {
+  } else if (req.method === 'DELETE') {
+    try {
+      const response = await unlikeItem(id, cookie)
+
+      res.status(200).json(response)
+    } catch (e) {
+      const error = extractError(e)
+      res.status(error.statusCode).json(error)
+    }
   }
 }
 
-export async function likeItem(itemId: string | number) {
-  // const data = {
-  //   method: 'post',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${cookie}`,
-  //   },
-  // }
+export async function likeItem(itemId: number, cookie: any) {
+  const config = createApiConfig('post', cookie)
 
-  // const cookie = client.defaults.headers.common['Cookie']
-
-  const parsedItemId = typeof itemId === 'string' ? itemId : itemId.toString()
-
-  const config = {
-    method: 'Post',
-    headers: {
-      'Content-Type': 'application/json',
-      // Authorization: `Bearer ${cookie}`,
-    },
-  }
   const response = await client.post<LikeItemResult>(
-    `http://localhost:8080/api/items/${parsedItemId}/likes`,
+    `http://localhost:8080/api/items/${itemId}/likes`,
+    {},
     config,
   )
   return response.data
 }
 
-export async function unlikeItem(itemId: number) {
-  const response = await client.delete<LikeItemResult>(`/api/items/${itemId}/likes`)
+export async function unlikeItem(itemId: number, cookie: any) {
+  const config = createApiConfig('delete', cookie)
+
+  const response = await client.delete<LikeItemResult>(
+    `http://localhost:8080/api/items/${itemId}/likes`,
+    config,
+  )
   return response.data
+}
+
+export function createApiConfig(method: 'post' | 'get' | 'delete', cookie: any) {
+  const config = {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: cookie,
+    },
+  }
+  return config
 }

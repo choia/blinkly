@@ -5,7 +5,7 @@ export interface GetItemResult {
 }
 
 export interface Item {
-  id: string
+  id: number
   title: string
   body: string
   link: string

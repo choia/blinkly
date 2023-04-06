@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useWriteContext } from '@/contexts/writeContext'
-import { client } from '@/lib/client'
+import { client, setClientCookie } from '@/lib/client'
 import LinkCardList from '@/components/layouts/home/linkCardList'
 import TabLayout from '@/components/templates/tabLayout'
 import { GetItemResult } from './api/types'
@@ -12,19 +12,23 @@ import type { InferGetStaticPropsType } from 'next'
 import axios from 'axios'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
-interface QueryProps {
-  query: {
-    cursor: string
-  }
-}
+// interface QueryProps {
+//   query: {
+//     cursor: string
+//   },
+// }
 
-export default function Home({ data }: InferGetStaticPropsType<typeof getServerSideProps>) {
+export default function Home({
+  data,
+  cookies,
+}: InferGetStaticPropsType<typeof getServerSideProps>) {
   const router = useRouter()
   const { state, actions } = useWriteContext()
   const [itemData, setItemData] = useState()
   const [pages, setPages] = useState([data])
 
   const ref = useRef<HTMLDivElement>(null)
+  setClientCookie(cookies)
 
   const fetchNext = useCallback(async () => {
     const { hasNextPage, endCursor } = pages.at(-1)?.pageInfo ?? {
@@ -66,7 +70,7 @@ export default function Home({ data }: InferGetStaticPropsType<typeof getServerS
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <StyledTabLayout>
-        <LinkCardList items={items}></LinkCardList>
+        <LinkCardList items={items} cookies={cookies}></LinkCardList>
         <div ref={ref}></div>
         <h2>Looooooooook</h2>
       </StyledTabLayout>
@@ -74,8 +78,10 @@ export default function Home({ data }: InferGetStaticPropsType<typeof getServerS
   )
 }
 
-export async function getServerSideProps({ query }: QueryProps) {
+export async function getServerSideProps({ query, req }) {
   const { cursor } = query
+  console.log('24312434', req.cookies)
+
   const parsedCursor = cursor !== undefined ? parseInt(cursor, 10) : undefined
   const url = 'http://localhost:8080/api/items'
 
@@ -93,6 +99,7 @@ export async function getServerSideProps({ query }: QueryProps) {
   return {
     props: {
       data: response.data,
+      cookies: req.cookies,
     },
   }
 }

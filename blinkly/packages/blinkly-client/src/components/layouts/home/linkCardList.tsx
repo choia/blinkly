@@ -4,13 +4,14 @@ import LinkCard from './linkCard'
 
 interface Props {
   items: Item[]
+  cookies: any
 }
 
-function LinkCardList({ items }: Props) {
+function LinkCardList({ items, cookies }: Props) {
   return (
     <List>
       {items.map((item) => (
-        <LinkCard key={item.id} item={item} />
+        <LinkCard key={item.id} item={item} cookies={cookies} />
       ))}
     </List>
   )

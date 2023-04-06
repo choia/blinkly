@@ -1,4 +1,4 @@
-import { ItemOverrideProvider } from '@/contexts/itemStatContext'
+import { ItemOverrideProvider } from '@/contexts/itemOverrideContext'
 import { UserContext, useUser } from '@/contexts/userContext'
 import { WriteProvider } from '@/contexts/writeContext'
 import '@/styles/globals.css'

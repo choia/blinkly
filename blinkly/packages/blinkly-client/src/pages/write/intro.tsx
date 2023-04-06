@@ -31,7 +31,7 @@ function Intro({ cookies }: InferGetStaticPropsType<typeof getServerSideProps>) 
       setErrorMessage('Please enter both title and content.')
       return
     }
-
+    console.log('1111intro', cookie)
     const data = {
       title: form.title,
       body: form.body,
@@ -57,7 +57,7 @@ function Intro({ cookies }: InferGetStaticPropsType<typeof getServerSideProps>) 
 
     try {
       const response = await axios(config)
-      console.log('7777777', response)
+
       router.push('/')
     } catch (e: any) {
       // console.log('hello', e.response.data)

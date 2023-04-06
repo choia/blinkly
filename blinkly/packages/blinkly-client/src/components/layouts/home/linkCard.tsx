@@ -5,22 +5,34 @@ import { colors } from '@/lib/colors'
 import { Item } from '@/pages/api/types'
 import styled from 'styled-components'
 import { useDateDistance } from '@/hooks/useDateDistance'
+import { useLikeManager } from '@/hooks/useLikeManager'
+import LikeButton from '@/components/common/likeButton'
+import { useItemOverrideById } from '@/contexts/itemOverrideContext'
 import { client } from '@/lib/client'
 
 interface Props {
   item: Item
+  cookies: any
 }
 
-function LinkCard({ item }: Props) {
-  const { id, title, body, link, thumbnail, author, publisher, user, createdAt } = item
+function LinkCard({ item, cookies }: Props) {
+  const { id, title, body, thumbnail, author, publisher, user, createdAt } = item
+  const itemOverride = useItemOverrideById(id)
+  const dateDistance = useDateDistance(createdAt)
+  const { like, unlike } = useLikeManager()
 
-  const handleLikeItem = async () => {
-    try {
-      const response = await axios.post('/api/itemLike', { param: id })
-    } catch (e) {}
+  const itemStats = itemOverride?.itemStats ?? item.itemStats
+  const isLiked = itemOverride?.isLiked ?? item.isLiked
+  const likes = itemOverride?.itemStats.likes ?? itemStats.likes
+
+  const toggleLike = async () => {
+    if (isLiked) {
+      unlike(id, itemStats, cookies)
+    } else {
+      like(id, itemStats, cookies)
+    }
   }
 
-  const dateDistance = useDateDistance(createdAt)
   return (
     <Block>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
@@ -34,12 +46,9 @@ function LinkCard({ item }: Props) {
       </Publisher>
       <h3>{title}</h3>
       <p>{body}</p>
+      {likes === 0 ? null : <LikesCount>Likes {itemStats.likes.toLocaleString()}</LikesCount>}
       <Footer>
-        <StyleHeartOutline
-          onClick={() => {
-            handleLikeItem()
-          }}
-        />
+        <LikeButton isLiked={isLiked} onClick={toggleLike} />
         <UserInfo>
           by <b>{user.username}</b> · {dateDistance}
         </UserInfo>
@@ -97,6 +106,14 @@ const Publisher = styled.div`
 
 const StyleHeartOutline = styled(HeartOutline)`
   color: ${colors.gray3};
+`
+
+const LikesCount = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${colors.gray4};
+  line-height: 1.5;
+  margin-bottom: 8px;
 `
 
 const Footer = styled.div`

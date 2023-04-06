@@ -87,6 +87,7 @@ const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
     '/:id/likes',
     { schema: LikeItemSchema },
     async (request) => {
+      console.log('1111params', request.params)
       const { id: itemId } = request.params
       const userId = request.user!.id
 

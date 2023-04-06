@@ -17,8 +17,8 @@ const server = Fastify({
 
 if (process.env.NODE_ENV === 'development') {
   server.register(cors, {
-    origin: '/localhost/',
-    allowedHeaders: ['Cookie'],
+    origin: /localhost/,
+    allowedHeaders: ['Cookie', 'Content-Type'],
     credentials: true,
   })
 }

@@ -14,10 +14,11 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
 
   const id = req.body['id']
   const cookie = req.body.headers['Authorization']
+  const controller = req.body.controller
 
   if (req.method === 'POST') {
     try {
-      const response = await likeItem(id, cookie)
+      const response = await likeItem(id, cookie, controller)
 
       res.status(200).json(response)
     } catch (e) {
@@ -26,7 +27,7 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
     }
   } else if (req.method === 'DELETE') {
     try {
-      const response = await unlikeItem(id, cookie)
+      const response = await unlikeItem(id, cookie, controller)
 
       res.status(200).json(response)
     } catch (e) {
@@ -36,8 +37,8 @@ export default async function itemLikeHandler(req: NextApiRequest, res: NextApiR
   }
 }
 
-export async function likeItem(itemId: number, cookie: any) {
-  const config = createServerApiConfig('post', cookie)
+export async function likeItem(itemId: number, cookie: any, controller?: AbortController) {
+  const config = createServerApiConfig('post', cookie, controller)
 
   const response = await client.post<LikeItemResult>(
     `http://localhost:8080/api/items/${itemId}/likes`,
@@ -47,8 +48,8 @@ export async function likeItem(itemId: number, cookie: any) {
   return response.data
 }
 
-export async function unlikeItem(itemId: number, cookie: any) {
-  const config = createServerApiConfig('delete', cookie)
+export async function unlikeItem(itemId: number, cookie: any, controller?: AbortController) {
+  const config = createServerApiConfig('delete', cookie, controller)
 
   const response = await client.delete<LikeItemResult>(
     `http://localhost:8080/api/items/${itemId}/likes`,

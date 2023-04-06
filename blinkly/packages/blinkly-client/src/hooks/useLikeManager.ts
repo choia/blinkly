@@ -7,6 +7,7 @@ import { createClientApiConfig, createItemLikeApiData } from '@/lib/apiConfig'
 export function useLikeManager() {
   const { actions } = useItemOverride()
   const abortControllers = useRef(new Map<number, AbortController>()).current
+
   const like = useCallback(
     async (id: number, initialState: ItemStats, cookies: any) => {
       const prevController = abortControllers.get(id)
@@ -24,8 +25,8 @@ export function useLikeManager() {
         const controller = new AbortController()
         abortControllers.set(id, controller)
 
-        const config2 = { ...config, controller }
-        const resultData = await axios<LikeItemResult>(config2)
+        const configWithController = { ...config, controller }
+        const resultData = await axios<LikeItemResult>(configWithController)
 
         const result = resultData.data
         actions.set(id, {
@@ -36,11 +37,14 @@ export function useLikeManager() {
         console.error(e)
       }
     },
-    [actions],
+    [actions, abortControllers],
   )
+
   const unlike = useCallback(
     async (id: number, initialState: ItemStats, cookies: any) => {
+      const prevController = abortControllers.get(id)
       try {
+        prevController?.abort()
         actions.set(id, {
           itemStats: { ...initialState, likes: initialState.likes - 1 },
           isLiked: false,
@@ -50,7 +54,11 @@ export function useLikeManager() {
         const data = createItemLikeApiData(id, cookie)
         const config = createClientApiConfig('/api/itemLike', 'delete', cookie, data)
 
-        const resultData = await axios<LikeItemResult>(config)
+        const controller = new AbortController()
+        abortControllers.set(id, controller)
+
+        const configWithController = { ...config, controller }
+        const resultData = await axios<LikeItemResult>(configWithController)
 
         const result = resultData.data
         actions.set(id, {
@@ -61,7 +69,7 @@ export function useLikeManager() {
         console.error(e)
       }
     },
-    [actions],
+    [actions, abortControllers],
   )
   return { like, unlike }
 }

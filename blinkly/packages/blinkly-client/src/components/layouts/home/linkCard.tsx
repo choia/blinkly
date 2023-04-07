@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import axios from 'axios'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Globe, HeartOutline } from '@/components/vectors'
 import { colors } from '@/lib/colors'
 import { Item } from '@/pages/api/types'
@@ -46,7 +47,19 @@ function LinkCard({ item, cookies }: Props) {
       </Publisher>
       <h3>{title}</h3>
       <p>{body}</p>
-      {likes === 0 ? null : <LikesCount>Likes {itemStats.likes.toLocaleString()}</LikesCount>}
+      <AnimatePresence initial={false}>
+        {likes === 0 ? null : (
+          <LikesCount
+            key="likes"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 26, opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+          >
+            {itemStats.likes.toLocaleString()} Likes
+          </LikesCount>
+        )}
+      </AnimatePresence>
+
       <Footer>
         <LikeButton isLiked={isLiked} onClick={toggleLike} />
         <UserInfo>
@@ -92,7 +105,7 @@ const Publisher = styled.div`
   display: flex;
   align-items: center;
   color: ${colors.gray3};
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 4px;
   line-height: 1.5;
   img,
@@ -104,29 +117,25 @@ const Publisher = styled.div`
   }
 `
 
-const StyleHeartOutline = styled(HeartOutline)`
-  color: ${colors.gray3};
-`
-
-const LikesCount = styled.div`
+const LikesCount = styled(motion.div)`
   font-size: 12px;
   font-weight: 600;
   color: ${colors.gray4};
   line-height: 1.5;
-  margin-bottom: 8px;
+  height: 26px;
+  display: flex;
 `
 
 const Footer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  img,
-  svg {
-    display: block;
-    margin-right: 8px;
-    width: 24px;
-    height: 24px;
-  }
+`
+
+const LikeCountWrapper = styled.div`
+  display: flex;
+  height: 26px;
+  gap: 12px;
 `
 
 const UserInfo = styled.div`

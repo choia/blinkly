@@ -13,6 +13,7 @@ import { client } from '@/lib/client'
 import { useUser } from '@/contexts/userContext'
 import { useDialog } from '@/contexts/dialogContext'
 import { useRouter } from 'next/router'
+import { useOpenLoginDialog } from '@/hooks/useOpenLoginDialog'
 
 interface Props {
   item: Item
@@ -29,21 +30,15 @@ function LinkCard({ item, cookies }: Props) {
   const itemStats = itemOverride?.itemStats ?? item.itemStats
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const likes = itemOverride?.itemStats.likes ?? itemStats.likes
-  const { open } = useDialog()
 
-  const router = useRouter()
+  const openLoginDialog = useOpenLoginDialog()
 
   const toggleLike = async () => {
     if (!currentUser) {
-      open({
-        title: 'hihih',
-        description: 'hhihihihi',
-        onConfirm() {
-          router.push('/login')
-        },
-      })
+      openLoginDialog('like')
       return
     }
+
     if (isLiked) {
       unlike(id, itemStats, cookies)
     } else {

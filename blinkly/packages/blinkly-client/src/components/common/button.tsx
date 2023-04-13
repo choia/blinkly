@@ -4,22 +4,33 @@ import styled, { css } from 'styled-components'
 
 interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth'
+  variant?: 'primary' | 'secondary'
 }
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
 
-const Button = ({ layoutMode = 'inline', ...rest }: Props) => {
-  return <StyledButton layoutMode={layoutMode} {...rest} />
+const Button = ({ layoutMode = 'inline', variant = 'primary', ...rest }: Props) => {
+  return <StyledButton layoutMode={layoutMode} variant={variant} {...rest} />
+}
+
+const variantStyles = {
+  primary: css`
+    background: ${colors.primary};
+    color: white;
+  `,
+  secondary: css`
+    background: ${colors.secondary};
+    color: ${colors.primary};
+  `,
 }
 
 const StyledButton = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${colors.primary};
+  ${(props) => variantStyles[props.variant!]}
   border: none;
   border-radius: 4px;
-  color: white;
   height: 48px;
   font-size: 16px;
   padding-left: 16px;

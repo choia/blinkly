@@ -6,10 +6,9 @@ import { AuthParams, AuthResult } from './types'
 export default async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { result, cookieHeader } = await loginPostApi(req.body)
-    const { id, username } = result.user
 
     res.setHeader('Set-Cookie', cookieHeader)
-    res.status(200).json({ id, username })
+    res.status(200).json({ user: result.user })
   }
 }
 

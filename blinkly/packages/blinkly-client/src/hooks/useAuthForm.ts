@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
+import { useAuthRedirect } from './useAuthRedirect'
+import { useRouter } from 'next/router'
 
 interface FormInputConfig {
   name?: string
@@ -52,6 +54,7 @@ export function useAuthForm<T extends string>({
   shouldPreventDefault,
   config,
 }: UseFormParams<T>) {
+  const router = useRouter()
   const [data, setData] = useState<AxiosResponse<any, any>>()
   const [errors, setErrors] = useState<Partial<Record<T, string | null>>>({})
   const errorRef = useRef(errors)
@@ -133,9 +136,13 @@ export function useAuthForm<T extends string>({
         try {
           const response = await axios(config)
           setData(response.data)
-          // console.log(response)
+          // console.log('d12', response)
+          if (response.status === 200) {
+            console.log('rrr1', router)
+            router.push('/')
+          }
         } catch (e: any) {
-          console.log(e.response.data.name, e.response.data.error.message)
+          // console.log(e.response.data.name, e.response.data.error.message)
         }
 
         onSubmit(formDataJSON, e)

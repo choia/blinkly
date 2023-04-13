@@ -1,3 +1,6 @@
+import Dialog from '@/components/common/dialog'
+import Modal from '@/components/common/modal'
+import DialogProvider from '@/contexts/dialogContext'
 import { ItemOverrideProvider } from '@/contexts/itemOverrideContext'
 import { UserContext, useUser } from '@/contexts/userContext'
 import { WriteProvider } from '@/contexts/writeContext'
@@ -14,7 +17,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <UserContext.Provider value={data}>
         <WriteProvider>
           <ItemOverrideProvider>
-            <Component {...pageProps} />
+            <DialogProvider>
+              <Component {...pageProps} />
+            </DialogProvider>
           </ItemOverrideProvider>
         </WriteProvider>
       </UserContext.Provider>

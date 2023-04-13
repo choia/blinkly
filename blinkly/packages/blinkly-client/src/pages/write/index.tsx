@@ -6,6 +6,9 @@ import WriteFormTemplate from '@/components/layouts/write/writeFormTemplate'
 import { FormEvent, useState } from 'react'
 import LabelInput from '@/components/common/labelInput'
 import { useWriteContext } from '@/contexts/writeContext'
+import { checkIsLoggedIn } from '@/lib/protectRoute'
+import { NextPageContext } from 'next'
+import { applyAuth } from '@/lib/applyAuth'
 
 const Write = () => {
   const router = useRouter()
@@ -28,7 +31,6 @@ const Write = () => {
           placeholder="https://example.com"
           name="link"
           value={state.form.link}
-          // defaultValue={state.form.link}input
           onChange={(e) => actions.change('link', e.target.value)}
           errorMessage={state.error?.statusCode === 422 ? 'Incorrect URL' : undefined}
         ></LabelInput>
@@ -36,5 +38,19 @@ const Write = () => {
     </BasicLayout>
   )
 }
+
+// export async function getServerSideProps(context: NextPageContext) {
+//   const { req } = context
+//   const applied = applyAuth(req)
+//   if (!applied) {
+//     throw new Error('Not logged in')
+//   }
+
+//   console.log('12121212', req)
+
+//   return {
+//     props: {},
+//   }
+// }
 
 export default Write

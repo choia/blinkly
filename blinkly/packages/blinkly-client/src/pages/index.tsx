@@ -71,8 +71,8 @@ export default function Home({
       </Head>
       <StyledTabLayout>
         <LinkCardList items={items} cookies={cookies}></LinkCardList>
+
         <div ref={ref}></div>
-        <h2>Looooooooook</h2>
       </StyledTabLayout>
     </>
   )
@@ -80,7 +80,6 @@ export default function Home({
 
 export async function getServerSideProps({ query, req }) {
   const { cursor } = query
-  console.log('24312434', req.cookies)
 
   const parsedCursor = cursor !== undefined ? parseInt(cursor, 10) : undefined
   const url = 'http://localhost:8080/api/items'

@@ -10,6 +10,9 @@ import { useLikeManager } from '@/hooks/useLikeManager'
 import LikeButton from '@/components/common/likeButton'
 import { useItemOverrideById } from '@/contexts/itemOverrideContext'
 import { client } from '@/lib/client'
+import { useUser } from '@/contexts/userContext'
+import { useDialog } from '@/contexts/dialogContext'
+import { useRouter } from 'next/router'
 
 interface Props {
   item: Item
@@ -21,12 +24,26 @@ function LinkCard({ item, cookies }: Props) {
   const itemOverride = useItemOverrideById(id)
   const dateDistance = useDateDistance(createdAt)
   const { like, unlike } = useLikeManager()
+  const currentUser = useUser()
 
   const itemStats = itemOverride?.itemStats ?? item.itemStats
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const likes = itemOverride?.itemStats.likes ?? itemStats.likes
+  const { open } = useDialog()
+
+  const router = useRouter()
 
   const toggleLike = async () => {
+    if (!currentUser) {
+      open({
+        title: 'hihih',
+        description: 'hhihihihi',
+        onConfirm() {
+          router.push('/login')
+        },
+      })
+      return
+    }
     if (isLiked) {
       unlike(id, itemStats, cookies)
     } else {

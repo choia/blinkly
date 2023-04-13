@@ -11,7 +11,7 @@ interface Props {
 function Modal({ visible, className, children }: Props) {
   return (
     <>
-      <Overlay />
+      <Overlay visible={visible} />
       <PositionBox>
         <AnimatePresence>
           {visible && (

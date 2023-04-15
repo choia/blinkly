@@ -62,11 +62,11 @@ ItemSchema.example = {
   isLiked: true,
 }
 
-const ItemParamSchema = Type.Object({
+export const ItemParamSchema = Type.Object({
   id: Type.Integer(),
 })
 
-type ItemParamType = Static<typeof ItemParamSchema>
+export type ItemParamType = Static<typeof ItemParamSchema>
 
 const UpdateItemBodySchema = Type.Object({
   title: Type.String(),

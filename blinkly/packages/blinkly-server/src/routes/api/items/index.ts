@@ -20,6 +20,7 @@ import {
   WriteItemSchema,
 } from './schema.js'
 import ItemService from '../../../services/item.service.js'
+import { commentsRoute } from './comments/index.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
   const itemService = ItemService.getInstance()
@@ -46,6 +47,8 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
       })) as any
     },
   )
+
+  fastify.register(commentsRoute, { prefix: '/:id/comments' })
 }
 
 const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {

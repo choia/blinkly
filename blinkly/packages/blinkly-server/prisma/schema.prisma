@@ -11,13 +11,16 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique
-  passwordHash String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  item         Item[]
-  token        Token[]
+  id                Int           @id @default(autoincrement())
+  username          String        @unique
+  passwordHash      String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  item              Item[]
+  token             Token[]
+  comments          Comment[]     @relation("user")
+  mentionedComments Comment[]     @relation("mentionUser")
+  CommentLike       CommentLike[]
 }
 
 model Token {
@@ -47,6 +50,8 @@ model Item {
   publisherId Int
   itemsTags   ItemsTags[]
   itemStats   ItemStats?
+  comments    Comment[]
+  itemLikes   ItemLike[]
 
   @@index([createdAt(sort: Desc)])
 }
@@ -96,15 +101,53 @@ model ItemLike {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
   @@unique([itemId, userId])
 }
 
 model ItemStats {
-  id     Int  @id @default(autoincrement())
-  itemId Int  @unique
-  likes  Int  @default(0)
-  score  Int  @default(0)
-  item   Item @relation(fields: [itemId], references: [id])
+  id            Int  @id @default(autoincrement())
+  itemId        Int  @unique
+  likes         Int  @default(0)
+  score         Int  @default(0)
+  commentsCount Int  @default(0)
+  item          Item @relation(fields: [itemId], references: [id])
 
   updateAt DateTime @default(now()) @updatedAt
+}
+
+model Comment {
+  id   Int    @id @default(autoincrement())
+  text String
+
+  item          Item  @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user          User  @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  mentionedUser User? @relation("mentionUser", fields: [mentionUserId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  likes Int @default(0)
+
+  mentionUserId   Int?
+  parentCommentId Int?
+  itemId          Int
+  commentLikes    CommentLike[]
+  userId          Int
+}
+
+model CommentLike {
+  id        Int @id @default(autoincrement())
+  commentId Int
+  userId    Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
 }

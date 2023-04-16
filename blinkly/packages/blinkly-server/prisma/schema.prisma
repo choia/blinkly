@@ -104,6 +104,7 @@ model ItemLike {
   item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@unique([itemId, userId])
+  @@index([itemId])
 }
 
 model ItemStats {
@@ -129,7 +130,8 @@ model Comment {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  likes Int @default(0)
+  likes            Int @default(0)
+  subcommentsCount Int @default(0)
 
   mentionUserId   Int?
   parentCommentId Int?
@@ -150,4 +152,5 @@ model CommentLike {
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([commentId, userId])
+  @@index([commentId])
 }

@@ -138,6 +138,10 @@ model Comment {
   itemId          Int
   commentLikes    CommentLike[]
   userId          Int
+
+  @@index(deletedAt)
+  @@index(createdAt)
+  @@index(parentCommentId)
 }
 
 model CommentLike {

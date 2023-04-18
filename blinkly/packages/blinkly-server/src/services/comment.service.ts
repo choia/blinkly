@@ -26,6 +26,32 @@ class CommentService {
     return this.groupSubcomments(comments)
   }
 
+  redact(comments: Comment[]) {
+    return comments.map((c) => {
+      if (!c.deletedAt)
+        return {
+          ...c,
+          isDeleted: false,
+        }
+
+      const someDate = new Date(0)
+      return {
+        ...c,
+        createdAt: someDate,
+        updatedAt: someDate,
+        subcommentsCount: 0,
+        text: '',
+        user: {
+          id: -1,
+          username: 'deleted',
+        },
+        mentionUser: null,
+        subcomments: [],
+        isDeleted: true,
+      }
+    })
+  }
+
   async groupSubcomments(comments: Comment[]) {
     const rootComments = comments.filter((c) => c.parentCommentId === null)
     const subcommentsMap = new Map<number, Comment[]>()
